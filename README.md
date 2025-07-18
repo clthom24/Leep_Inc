@@ -196,10 +196,10 @@ npm run preview    # Preview production build
 
 ## ✅ Final Note
 
-This guide should evolve as your team builds. Don’t hesitate to:
+This guide should evolve as our team builds. Don’t hesitate to:
 
 * Add new reusable classes to `globals.css`
 * Expand the service layer as backend APIs evolve
 * Ask teammates to review your code for consistency
 
-You’re building something awesome — let’s keep it clean, scalable, and fun!
+We’re building something awesome — let’s keep it clean, scalable, and fun!
