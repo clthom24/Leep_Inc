@@ -1,0 +1,12 @@
+/* src/styles/globals.css */
+
+/* Reset browser default body margin */
+html, body, #root {
+  height: 100%;
+  background-color: #121212; /* match your dark theme */
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif; /* your chosen font */
+}

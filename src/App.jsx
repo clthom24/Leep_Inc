@@ -4,9 +4,15 @@ import viteLogo from '/vite.svg';
 import './styles/globals.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import Navigation from './components/common/Navigation';
+import LandingPage from './pages/Landing';
 import ProfilePage from './pages/Profile';
 import DiscoveryPage from './pages/Discovery';
 import CollaborationPage from './pages/Collaboration';
+import PricingPage from './pages/Pricing';
+import AboutPage from './pages/About';
+import ContactPage from './pages/Contact';
+import MessagesPage from './pages/Messages';
 
 function HomePage() {
   const [count, setCount] = useState(0);
@@ -38,11 +44,16 @@ function HomePage() {
 function App() {
   return (
     <BrowserRouter>
+      <Navigation />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/discovery" element={<DiscoveryPage />} />
         <Route path="/collab" element={<CollaborationPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/messages" element={<MessagesPage />} />
       </Routes>
     </BrowserRouter>
   );
