@@ -1,0 +1,148 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  align-items: flex-start;
+  background-color: #0f1115;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: 'Roboto', sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  padding-top: 9rem;
+}
+
+.box {
+  background-color: #141821;
+  border-color: #2a2f3a;
+  border-style: solid;
+  border-radius: 1rem;
+  border-width: 0.125rem;
+  padding: 1.125rem;
+  width: 22rem;
+}
+
+.field {
+  background-color: #2a2f3a;
+  border: none;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  color: #fff;
+  display: block;
+  font-size: 0.875rem;
+  margin-bottom: 0.875rem;
+  padding: 0.875rem;
+  width: 100%;
+}
+
+.button {
+  background-color: #fff;
+  border: none;
+  border-radius: 1rem;
+  box-sizing: border-box;
+  color: black;
+  cursor: pointer;
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.875rem;
+  margin-inline: auto;
+  margin-top: 0.875rem;
+  padding: 0.875rem;
+  transition: opacity 0.15s ease;
+  width: 100%;
+}
+
+.button:hover {
+  opacity: 70%;
+}
+
+.forgotPassword {
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.875rem;
+  opacity: 60%;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
+
+.orText {
+  color: #fff;
+  display: inline-block;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  opacity: 60%;
+}
+
+.switchSignInScreen {
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  opacity: 60%;
+  text-decoration: underline;
+}
+
+.boxLabel {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.errorMessage {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  margin-top: 0.625rem;
+  min-height: 1.25rem;
+  opacity: 85%;
+}
+
+.passwordWrapper {
+  margin-bottom: 0.875rem;
+  position: relative;
+  width: 100%;
+}
+
+.passwordField {
+  background-color: #2a2f3a;
+  border: none;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  color: #fff;
+  display: block;
+  font-size: 0.875rem;
+  padding: 0.875rem;
+  width: 100%;
+}
+
+.togglePassword {
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.75rem;
+  opacity: 70%;
+  padding: 0.4rem;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  user-select: none;
+}
+
+.togglePassword:hover {
+  text-decoration: underline;
+}
+
+.successMessage {
+  color: #4caf50;  /* green for success */
+  font-size: 0.875rem;
+  margin-top: 0.625rem;
+  min-height: 1.25rem;
+  opacity: 85%;
+}
