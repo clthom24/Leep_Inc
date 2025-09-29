@@ -1,0 +1,400 @@
+/* === Base reset (must be at the very top) === */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+body { margin: 0; }                        /* <- removes default top/left gap */
+a { color: inherit; }                      /* use your theme color for links */
+
+
+/* =============================================================================
+   File: STYLEGUIDE.css
+   Purpose: Shared design tokens + reusable patterns for Leep Audio (CSS Modules)
+   Usage: Import this file (or copy relevant parts) into each page’s module.
+          Keep page-level chrome in page styles; keep granular rows in component styles.
+   ============================================================================ */
+
+/* ========= 1) Design Tokens (Dark Theme) ================================== */
+/* Use these custom properties everywhere instead of hard-coded values. */
+:root {
+  --bg: #0f1115;                 /* app background */
+  --bg-muted: #171a21;           /* headers, footers, asides */
+  --panel: #141821;              /* panels/cards */
+  --surface: #141821;            /* row surfaces */
+  --surface-hover: #1a1f2a;      /* row/card hover */
+  --border: #2a2f3a;             /* hairline borders */
+  --text: #e8ebf0;               /* primary text */
+  --text-subtle: #9aa3b2;        /* secondary/info text */
+  --brand: #4fc3f7;              /* primary accent */
+  --shadow: 0 4px 18px rgba(0,0,0,0.25); /* elevation */
+}
+
+/* ========= 2) Typography =================================================== */
+/* Apply font on page root; headings/body sizes below are reference patterns. */
+.le-root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+               Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* Headings: prefer semantic classes over element targets inside modules. */
+.le-h1 { font-size: 32px; font-weight: 800; line-height: 1.2; }
+.le-h2 { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.le-h3 { font-size: 20px; font-weight: 600; line-height: 1.25; }
+.le-body { font-size: 14px; line-height: 1.5; }
+.le-meta { font-size: 13px; color: var(--text-subtle); }
+
+/* ========= 3) Spacing & Radii ============================================= */
+/* Spacing scale: use these as references in components. */
+:root {
+  --sp-6: 6px;  --sp-8: 8px;  --sp-10: 10px;  --sp-12: 12px;
+  --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+  --r-8: 8px; --r-10: 10px; --r-12: 12px; --r-14: 14px; --r-full: 999px;
+}
+
+/* ========= 4) Layout Patterns ============================================= */
+/* Page shell (use when a page renders without the global AppLayout). */
+.le-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Section stretches a single panel full width; add max-width if desired. */
+.le-section {
+  display: grid;
+  gap: var(--sp-16);
+  grid-template-columns: 1fr; /* stretch children */
+  /* Optional:
+  max-width: 1100px;
+  margin-inline: auto; */
+}
+
+.le-sectionTitle { font-size: 24px; font-weight: 600; }
+
+/* Panel (card-like container). Use inside sections or main areas. */
+.le-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-14);
+  padding: var(--sp-20);
+  box-shadow: var(--shadow);
+  width: 100%;
+}
+
+/* “Sticky header + scrollable body” panel variant */
+.le-panelHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  position: sticky; top: 0; z-index: 1; /* keeps header visible while list scrolls */
+}
+.le-panelBody {
+  min-height: 0; overflow: auto; /* only body scrolls */
+  padding: 16px 20px;
+}
+
+/* ========= 5) Grid & List Patterns ======================================== */
+/* Responsive grid for playlist cards. */
+.le-grid {
+  display: grid;
+  gap: var(--sp-16);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+/* Scrollable list with consistent spacing + custom scrollbar. */
+.le-list {
+  display: flex; flex-direction: column; gap: 12px;
+  min-height: 0; overflow: auto; padding-right: 6px;
+  list-style: none; margin: 0; padding-left: 0;
+  scrollbar-width: thin; /* Firefox */
+}
+.le-list::-webkit-scrollbar { width: 8px; }
+.le-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.le-list::-webkit-scrollbar-thumb:hover { background: #3a4654; }
+
+/* ========= 6) Cards ======================================================== */
+.le-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  border: 1px solid var(--border);
+  border-radius: var(--r-12);
+  padding: var(--sp-16);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform .08s ease, box-shadow .08s ease, border-color .08s ease;
+}
+.le-card:hover {
+  transform: translateY(-2px);
+  border-color: #3aaada; /* brand-tinted edge */
+  box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+}
+.le-cardTitle { font-weight: 600; font-size: 16px; margin-bottom: 2px; }
+.le-cardMeta  { color: var(--text-subtle); font-size: 13px; }
+
+/* ========= 7) Row Pattern (e.g., Liked Songs track row) ==================== */
+/* Use in component-level modules; shown here for reference + reuse. */
+.le-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto; /* thumb | text | actions */
+  align-items: center;
+  gap: var(--sp-16);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-12);
+  padding: 12px 14px;
+  transition: background .14s ease, box-shadow .14s ease, transform .14s ease;
+  cursor: pointer;
+}
+.le-row:hover { background: var(--surface-hover); box-shadow: var(--shadow); transform: translateY(-1px); }
+
+.le-thumb { width: 48px; height: 48px; border-radius: var(--r-8); background: #3a3a3f; }
+
+.le-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.le-titleline { display: flex; align-items: baseline; min-width: 0; }
+.le-title {
+  font-size: 16px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.le-sep { margin: 0 6px; color: var(--text-subtle); }
+.le-artist {
+  color: var(--text-subtle);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.le-right { display: flex; align-items: center; gap: 12px; }
+.le-duration { font-size: 12px; color: var(--text-subtle); }
+
+/* ========= 8) Buttons & Controls ========================================== */
+/* Primary CTA */
+.le-btnPrimary {
+  background: var(--brand);
+  color: #0f1115;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: var(--r-10);
+  border: none;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.le-btnPrimary:hover { transform: translateY(-6px) scale(1.05); background: #76d7ff; }
+
+/* Ghost/neutral button */
+.le-btnGhost {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-10);
+  padding: 12px 18px;
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.le-btnGhost:hover { background: rgba(232,235,240,0.08); transform: translateY(-6px) scale(1.05); }
+
+/* Heart toggle (Like) */
+.le-heart {
+  width: 36px; height: 36px; border-radius: var(--r-full);
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+  transition: transform .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
+}
+.le-heart:hover { transform: scale(1.05); border-color: #3a3a40; background: #202024; }
+.le-heartOn { color: var(--brand); border-color: rgba(79,195,247,.25); background: rgba(79,195,247,.08); }
+
+/* Back button (Playlist detail) */
+.le-back {
+  background-color: #3b4251;
+  color: var(--text);
+  border-radius: var(--r-10);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.le-back:hover { background-color: #475066; }
+
+/* ========= 9) Motion Guidelines =========================================== */
+/* Keep micro-interactions fast and subtle to feel responsive. */
+:root {
+  --t-fast: 120ms;
+  --t-med: 200ms;
+}
+.le-animate {
+  transition: transform var(--t-fast) ease, box-shadow var(--t-fast) ease, background var(--t-fast) ease;
+}
+
+/* Example text entrance (used on Landing). Apply to entering elements. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ========= 10) Accessibility Defaults ===================================== */
+/* Always show visible focus for keyboard users. */
+:focus-visible { outline: 2px solid #76d7ff; outline-offset: 2px; }
+
+/* Rows that behave like buttons should opt-in to keyboard access in JS:
+   role="button" + tabIndex={0} + Enter/Space activation handlers. */
+
+/* ========= 11) Responsive Helpers ========================================= */
+/* Use fluid widths; avoid fixed pixel containers. Add min-width:0 in flex/grid
+   parents when children rely on ellipsis. */
+.le-min0 { min-width: 0; } /* apply to parent when truncation fails */
+
+/* ========= 12) Conventions & Notes ======================================== */
+/* 1) Keep **page-level** chrome (headers/footers/section/panel) in a page stylesheet.
+      Keep **row-level** anatomy (grids, truncation, toggles) in component styles.
+      This mirrors Liked Songs (page styles + TrackItem styles). */
+/* 2) Reuse tokens. Don’t introduce new colors without adding a variable. */
+/* 3) Prefer semantic class names: .le-panel, .le-card, .le-row, .le-title, etc. */
+/* 4) If you need an accent border, use var(--brand); do not invent --accent. */
+
+/* ========= 13) Quick Starters ============================================= */
+/* Section + Panel
+<section className={styles.le-section}>
+  <h1 className={styles.le-sectionTitle}>Title</h1>
+  <div className={styles.le-panel}>…content…</div>
+</section>
+*/
+
+/* Scrollable panel
+<div className={styles.le-panel}>
+  <div className={styles.le-panelHeader}>Header</div>
+  <div className={styles.le-panelBody}>…scrolling content…</div>
+</div>
+*/
+
+/* Row
+<li className={rowStyles.le-row}>
+  <div className={rowStyles.le-thumb} />
+  <div className={rowStyles.le-meta}>
+    <div className={rowStyles.le-titleline}>
+      <span className={rowStyles.le-title}>Song</span>
+      <span className={rowStyles.le-sep}> — </span>
+      <span className={rowStyles.le-artist}>Artist</span>
+    </div>
+  </div>
+  <div className={rowStyles.le-right}>
+    <span className={rowStyles.le-duration}>6:43</span>
+    <button className={`${rowStyles.le-heart} ${liked && rowStyles.le-heartOn}`}>♥</button>
+  </div>
+</li>
+*/
+
+/* ===== Header & Footer (shared chrome) ===== */
+/* Main wrapper (content area between header and footer) */
+.le-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+.le-header {
+  background: var(--bg-muted);
+  border-bottom: 1px solid var(--border);
+}
+.le-header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Brand */
+.le-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  text-decoration: none;
+}
+.le-brand__logo {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  border-radius: 8px;
+}
+.le-brand__name {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Search + Pricing */
+.le-search {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  min-width: 260px;
+}
+.le-search input {
+  flex: 1;
+  height: 34px;
+  padding: 0 10px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.le-search button,
+.le-btn {
+  height: 34px;
+  padding: 0 12px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-grid;
+  place-items: center;
+}
+
+/* Actions */
+.le-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.le-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 12px;
+}
+.le-avatar {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* Footer */
+.le-footer {
+  background: var(--bg-muted);
+  border-top: 1px solid var(--border);
+}
+.le-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  color: var(--text-subtle);
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .le-header__inner { flex-direction: column; align-items: stretch; gap: 12px; }
+  .le-action span { display: none; } /* hide labels under icons on small screens */
+}

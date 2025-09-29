@@ -1,51 +1,38 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './styles/globals.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// src/App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import AppLayout from "./components/layout/AppLayout.jsx";
 
-import ProfilePage from './pages/Profile';
-import DiscoveryPage from './pages/Discovery';
-import CollaborationPage from './pages/Collaboration';
+import SignedOut from "./pages/SignedOut/index.jsx";
+import HomeSignedIn from "./pages/HomeSignedIn/index.jsx";
+import Search from "./pages/Search/index.jsx";
+import Profile from "./pages/Profile/index.jsx";
 
-function HomePage() {
-  const [count, setCount] = useState(0);
-
+export default function App() {
   return (
-    <>
-      <div className="flex gap-4 mb-4">
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="text-4xl font-bold text-blue-500 underline">Tailwind is working!</h1>
-      <div className="card mt-4">
-        <button onClick={() => setCount(count + 1)}>
-          count is {count}
-        </button>
-        <p>Edit <code>src/App.jsx</code> and save to test HMR</p>
-      </div>
-      <p className="read-the-docs mt-2">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route element={<AppLayout />}>
+        {/* ---------- Signed OUT ---------- */}
+        <Route index element={<SignedOut />} />
+        <Route path="search" element={<Search />} />
+        <Route path="pricing" element={<div />} />
+        <Route path="help" element={<div />} />
+        <Route path="notifications" element={<div />} />
+
+        {/* ---------- Signed IN (/home/...) ---------- */}
+        <Route path="home" element={<HomeSignedIn />} />
+        <Route path="home/search" element={<Search />} />
+        <Route path="home/profile" element={<Profile />} />
+        <Route path="home/pricing" element={<div />} />
+        <Route path="home/help" element={<div />} />
+        <Route path="home/notifications" element={<div />} />
+
+        {/* Optional mirror */}
+        <Route path="profile" element={<Profile />} />
+
+        {/* Section-aware fallbacks */}
+        <Route path="home/*" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   );
 }
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/discovery" element={<DiscoveryPage />} />
-        <Route path="/collab" element={<CollaborationPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-export default App;
