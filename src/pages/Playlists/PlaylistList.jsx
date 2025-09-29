@@ -1,31 +1,49 @@
-// =============================================
+// ============================================================================
 // File: src/pages/Playlists/PlaylistList.jsx
-// Purpose: Grid of playlists that link to detail pages.
-// Notes: Replace mock data with usePlaylists() later.
-// =============================================
-import { Link } from "react-router-dom";
+// Purpose: Displays a grid of playlists, each linking to its detail page.
+// Notes:
+//   - Uses mock data for now; replace with API data later.
+//   - Each playlist is rendered as a <Link> card, navigates to /playlists/:id.
+//   - Scoped CSS Modules style section, grid, and cards.
+// ============================================================================
 
+import { Link } from "react-router-dom";
+import styles from "./styles/styles.module.css";
+
+/** ---------------------------------------------------------------------------
+ * Temporary mock data.
+ * Replace with playlists fetched from backend when available.
+ * Each playlist: { id, name, trackCount }
+ * ------------------------------------------------------------------------- */
 const mockPlaylists = [
   { id: "1", name: "Chill Vibes", trackCount: 24 },
   { id: "2", name: "Studio Session", trackCount: 12 },
+  { id: "3", name: "Late Night Coding", trackCount: 18 },
+  { id: "4", name: "Weekend Jam", trackCount: 31 },
 ];
 
+/**
+ * PlaylistList
+ * Renders a section with a grid of playlist cards.
+ * @returns {JSX.Element}
+ */
 export default function PlaylistList() {
   return (
-    <section>
-      <h1 className="text-2xl font-semibold mb-4">Playlists</h1>
+    <section className={styles.section}>
+      {/* Section heading */}
+      <h1 className={styles.sectionTitle}>Playlists</h1>
 
-      {/* Outer frame to match wireframe container */}
-      <div className="border rounded-xl p-6">
-        <div className="grid gap-4 sm:grid-cols-2">
+      {/* Card container */}
+      <div className={styles.panel}>
+        <div className={styles.grid}>
           {mockPlaylists.map((p) => (
             <Link
               key={p.id}
-              to={p.id}
-              className="rounded-lg border p-4 hover:shadow-sm"
+              to={p.id}                    // navigates to /playlists/:id
+              className={styles.card}
             >
-              <div className="text-lg font-medium">{p.name}</div>
-              <div className="text-sm text-gray-500">{p.trackCount} tracks</div>
+              <div className={styles.cardTitle}>{p.name}</div>
+              <div className={styles.cardMeta}>{p.trackCount} tracks</div>
             </Link>
           ))}
         </div>

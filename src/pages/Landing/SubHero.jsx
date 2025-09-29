@@ -3,7 +3,9 @@
 // Purpose: Top band with single-artist slideshow + copy + auth CTAs.
 // =============================================
 import styles from "./styles/styles.module.css";
+import StarBorder from "../../components/common/StarBorder"; 
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";         
 
 const FEATURES = [
   "Browse music",
@@ -99,8 +101,14 @@ export default function SubHero() {
           </p>
 
           <div className={styles.subHeroButtons}>
-            <a className={styles.primaryBtn} href="/signup">Sign Up Free</a>
-            <a className={styles.secondaryBtn} href="/signin">Sign In</a>
+            <StarBorder as={Link} to="/signup" className={styles.primaryBtn}>
+              Sign Up Free
+            </StarBorder>
+
+            {/* Plain secondary button */}
+            <Link to="/login" className={styles.secondaryBtn}>
+              Sign In
+            </Link>
           </div>
         </div>
       </div>

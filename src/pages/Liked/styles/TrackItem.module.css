@@ -1,0 +1,119 @@
+/* ============================================================================
+   File: src/pages/Liked/styles/TrackItem.module.css
+   Purpose: Styles for a single track row in the "Liked Songs" list.
+   Notes:
+     - This file handles per-row styling: grid layout, artwork box, metadata, 
+       and heart toggle button.
+     - The parent file (styles.module.css) manages the overall page panel, 
+       wrapper, and list scroll behavior.
+     - Two stylesheets are needed:
+         • styles.module.css → high-level layout, panel, and scroll container
+         • TrackItem.module.css → granular row/track styling
+       This separation keeps concerns clear: page container vs row component.
+   ========================================================================== */
+
+/* ==== Row container (clickable track row) ==== */
+.row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto; /* artwork | text | duration+heart */
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+  cursor: pointer;
+  width: 97%;   /* slight inset instead of full width (avoids overflow clipping) */
+  max-width: 100%;
+}
+
+.row:hover {
+  background: var(--surface-hover);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px); /* subtle lift on hover */
+}
+
+/* ==== Album artwork box ==== */
+.artwork {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #3a3a3f; /* placeholder color */
+}
+
+/* ==== Metadata (title + artist) ==== */
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; /* allows ellipsis inside children */
+}
+
+.titleArtist {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* truncate long titles */
+}
+
+.dash {
+  margin: 0 6px;
+  color: var(--text-subtle); /* muted separator */
+}
+
+.artist {
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* truncate long artist names */
+}
+
+/* ==== Right side (duration + heart) ==== */
+.rightSide {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.duration {
+  font-size: 12px;
+  color: var(--text-subtle);
+}
+
+/* ==== Heart button (like/unlike) ==== */
+.heart {
+  font-size: 18px;
+  line-height: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px; /* circle */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: transform 120ms ease, background 120ms ease, 
+              color 120ms ease, border-color 120ms ease;
+}
+
+.heart:hover {
+  transform: scale(1.05);
+  border-color: #3a3a40;
+  background: #202024;
+}
+
+/* Active (liked) state: accent color + tinted background */
+.heartOn {
+  color: var(--accent);
+  border-color: rgba(29, 185, 84, 0.25);
+  background: rgba(29, 185, 84, 0.08);
+}
