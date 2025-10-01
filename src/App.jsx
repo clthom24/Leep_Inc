@@ -11,6 +11,8 @@ import PlaylistsPage from "./pages/Playlists";
 import ProfilePage from "./pages/Profile";
 import DiscoveryPage from "./pages/Discovery";
 import CollaborationPage from "./pages/Collaboration";
+import SignInPage from './pages/Authentication/sign-In';
+import ForgotPasswordPage from './pages/Authentication/passwordReset';
 import AppLayout from "./components/common/AppLayout/AppLayout";
 
 function PrivateRoute({ children }) {
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/discovery" element={<DiscoveryPage />} />
         <Route path="/collab" element={<CollaborationPage />} />
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Auth-only (with shared layout) */}
         <Route
