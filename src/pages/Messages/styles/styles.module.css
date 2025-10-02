@@ -1,0 +1,44 @@
+/* MessageDashboard.module.css */
+
+.dashboardWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+}
+
+.tabsContainer {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  align-self: flex-start;
+}
+
+.tab {
+  padding: 12px 36px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  background: #141821; /* reuse panel background */
+  color: #e8ebf0;      /* reuse text color */
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  margin-right: 2px;
+  text-decoration: none;
+}
+
+.tabActive {
+  background: #0f1115; /* slightly lighter/darker for active */
+  color: #4fc3f7;      /* brand accent */
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.25);
+}
+
+.tabContent {
+  flex: 1;
+  background: #141821;
+  padding: 16px;
+  border-radius: 0 12px 12px 12px;
+  overflow: auto;
+  margin-top: -2px; /* overlap so active tab looks raised */
+}

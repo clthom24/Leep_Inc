@@ -14,6 +14,9 @@ import CollaborationPage from "./pages/Collaboration";
 import SignInPage from './pages/Authentication/sign-In';
 import ForgotPasswordPage from './pages/Authentication/passwordReset';
 import AppLayout from "./components/common/AppLayout/AppLayout";
+import MessageDashboardPage from "./pages/Messages/MessageDashboard";
+import Messages from "./pages/Messages/Messages";
+import Requests from "./pages/Messages/Requests";
 
 function PrivateRoute({ children }) {
   // TODO: add auth checks; for now pass through
@@ -42,6 +45,13 @@ export default function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/liked" element={<LikedPage />} />
           <Route path="/playlists/*" element={<PlaylistsPage />} />
+          
+          <Route path="/messagedashboard" element={<MessageDashboardPage />}>
+          <Route index element={<Messages />} />        {/* default tab */}
+          <Route path="messages" element={<Messages />} />
+          <Route path="requests" element={<Requests />} />
+          </Route>
+
         </Route>
       </Routes>
     </BrowserRouter>
