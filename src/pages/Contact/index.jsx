@@ -62,37 +62,37 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="contact-page">
-      <div className="container mx-auto px-6 py-12">
+    <div className="le-page">
+      <div className="le-section">
         
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="section-title">Get in Touch</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+        <div className="text-center">
+          <h1 className="le-h1" style={{color: 'var(--brand)', marginBottom: 'var(--sp-16)'}}>Get in Touch</h1>
+          <p className="le-body" style={{fontSize: '18px', color: 'var(--text-subtle)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6'}}>
             Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
 
         {/* Contact Methods */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--sp-20)', marginBottom: 'var(--sp-24)'}}>
           {contactMethods.map((method, index) => (
-            <div key={index} className="card-base text-center">
-              <div className="text-4xl mb-4">{method.icon}</div>
-              <h3 className="text-xl font-bold mb-2">{method.title}</h3>
-              <p className="text-gray-300 mb-3">{method.description}</p>
-              <p className="font-semibold" style={{color: 'var(--color-accent)'}}>{method.contact}</p>
+            <div key={index} className="le-card text-center" style={{padding: 'var(--sp-24)'}}>
+              <div style={{fontSize: '48px', marginBottom: 'var(--sp-20)'}}>{method.icon}</div>
+              <h3 className="le-h3" style={{marginBottom: 'var(--sp-12)'}}>{method.title}</h3>
+              <p className="le-body" style={{marginBottom: 'var(--sp-16)', lineHeight: '1.5'}}>{method.description}</p>
+              <p className="le-meta" style={{color: 'var(--brand)', fontWeight: '600', fontSize: '14px'}}>{method.contact}</p>
             </div>
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--sp-24)', maxWidth: '800px', margin: 'var(--sp-24) auto 0 auto', padding: '0 var(--sp-20)'}}>
           
           {/* Contact Form */}
-          <div className="card-base">
-            <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="le-panel" style={{height: 'fit-content', overflow: 'hidden'}}>
+            <h2 className="le-h2" style={{marginBottom: 'var(--sp-20)'}}>Send us a Message</h2>
+            <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: 'var(--sp-16)', width: '100%'}}>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
+                <label htmlFor="name" className="le-meta" style={{display: 'block', marginBottom: 'var(--sp-8)', fontWeight: '500'}}>
                   Name *
                 </label>
                 <input
@@ -102,12 +102,12 @@ export default function ContactPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="contact-input"
+                  className="le-input"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                <label htmlFor="email" className="le-meta" style={{display: 'block', marginBottom: 'var(--sp-8)', fontWeight: '500'}}>
                   Email *
                 </label>
                 <input
@@ -117,12 +117,12 @@ export default function ContactPage() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="contact-input"
+                  className="le-input"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                <label htmlFor="subject" className="le-meta" style={{display: 'block', marginBottom: 'var(--sp-8)', fontWeight: '500'}}>
                   Subject *
                 </label>
                 <select
@@ -131,7 +131,7 @@ export default function ContactPage() {
                   required
                   value={formData.subject}
                   onChange={handleChange}
-                  className="contact-input"
+                  className="le-input"
                 >
                   <option value="">Select a subject</option>
                   <option value="general">General Question</option>
@@ -143,7 +143,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                <label htmlFor="message" className="le-meta" style={{display: 'block', marginBottom: 'var(--sp-8)', fontWeight: '500'}}>
                   Message *
                 </label>
                 <textarea
@@ -153,33 +153,34 @@ export default function ContactPage() {
                   rows="5"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-md focus:outline-none focus:border-accent resize-none"
+                  className="le-input"
+                  style={{resize: 'vertical', minHeight: '120px'}}
                   placeholder="Tell us how we can help you..."
                 ></textarea>
               </div>
 
-              <button type="submit" className="btn-primary w-full">
+              <button type="submit" className="le-btnPrimary" style={{width: '100%'}}>
                 Send Message
               </button>
             </form>
           </div>
 
           {/* FAQ Section */}
-          <div>
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-4">
+          <div style={{height: 'fit-content'}}>
+            <h2 className="le-h2" style={{marginBottom: 'var(--sp-20)'}}>Frequently Asked Questions</h2>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--sp-16)'}}>
               {faqs.map((faq, index) => (
-                <div key={index} className="card-base">
-                  <h3 className="font-semibold mb-2" style={{color: 'var(--color-accent)'}}>{faq.question}</h3>
-                  <p className="text-gray-300 text-sm">{faq.answer}</p>
+                <div key={index} className="le-card">
+                  <h3 className="le-h3" style={{color: 'var(--brand)', marginBottom: 'var(--sp-8)', fontSize: '16px'}}>{faq.question}</h3>
+                  <p className="le-body" style={{fontSize: '14px'}}>{faq.answer}</p>
                 </div>
               ))}
             </div>
 
             {/* Additional Info */}
-            <div className="card-base mt-6">
-              <h3 className="font-bold mb-3">Response Times</h3>
-              <ul className="text-sm text-gray-300 space-y-1">
+            <div className="le-card">
+              <h3 className="le-h3" style={{marginBottom: 'var(--sp-12)', fontSize: '16px'}}>Response Times</h3>
+              <ul className="le-body" style={{fontSize: '13px', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--sp-6)'}}>
                 <li>• Email: Within 24 hours</li>
                 <li>• Live Chat: Immediate (during business hours)</li>
                 <li>• Technical Issues: Within 4 hours</li>

@@ -4,21 +4,29 @@ import Reviews from "./Reviews";
 
 export default function LandingPage() {
   return (
-    <main className="landing-page">
+    <main className="le-page">
       {/* Sub-hero band */}
       <SubHero />
 
       {/* Big headline + CTA */}
-      <section className="border-t border-border">
+      <section style={{borderTop: '1px solid var(--border)'}}>
         <Hero />
       </section>
 
       {/* Testimonials */}
-      <section className="border-t border-border">
+      <section style={{borderTop: '1px solid var(--border)'}}>
         <Reviews />
       </section>
 
-      <footer className="mt-auto border-t border-border p-6 text-center text-sm text-gray-400 bg-muted">
+      <footer style={{
+        marginTop: 'auto',
+        borderTop: '1px solid var(--border)',
+        padding: 'var(--sp-20)',
+        textAlign: 'center',
+        fontSize: '13px',
+        color: 'var(--text-subtle)',
+        background: 'var(--bg-muted)'
+      }}>
         © {new Date().getFullYear()} Leep Audio
       </footer>
     </main>

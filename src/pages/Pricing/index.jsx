@@ -46,54 +46,60 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
-      <div className="container mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <h1 className="section-title">Choose Your Plan</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+    <div className="le-page">
+      <div className="le-section">
+        <div className="text-center">
+          <h1 className="le-h1" style={{color: 'var(--brand)', marginBottom: 'var(--sp-16)'}}>Choose Your Plan</h1>
+          <p className="le-body" style={{fontSize: '18px', color: 'var(--text-subtle)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6'}}>
             Select the perfect plan to grow your music collaboration journey
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="le-grid" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', maxWidth: '1000px', margin: '0 auto'}}>
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`card-base relative ${
-                plan.popular ? 'border-2 border-[#1DB954]' : ''
-              }`}
+              className={`le-card relative`}
+              style={{
+                border: plan.popular ? `2px solid var(--brand)` : `1px solid var(--border)`,
+                transform: plan.popular ? 'scale(1.05)' : 'scale(1)'
+              }}
             >
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-[#1DB954] text-black px-4 py-1 rounded-full text-sm font-bold">
+                <div style={{position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)'}}>
+                  <span style={{
+                    background: 'var(--brand)',
+                    color: '#0f1115',
+                    padding: '6px 16px',
+                    borderRadius: 'var(--r-full)',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}>
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <div className="flex items-baseline justify-center">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-gray-400 ml-1">{plan.period}</span>
+              <div className="text-center" style={{marginBottom: 'var(--sp-20)'}}>
+                <h3 className="le-h2" style={{marginBottom: 'var(--sp-8)'}}>{plan.name}</h3>
+                <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'center'}}>
+                  <span className="le-h1" style={{fontSize: '36px'}}>{plan.price}</span>
+                  <span className="le-meta" style={{marginLeft: '4px'}}>{plan.period}</span>
                 </div>
               </div>
 
-              <ul className="space-y-3 mb-8">
+              <ul style={{display: 'flex', flexDirection: 'column', gap: 'var(--sp-12)', marginBottom: 'var(--sp-20)', listStyle: 'none', padding: 0}}>
                 {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <span className="text-[#1DB954] mr-3">✓</span>
-                    <span className="text-gray-300">{feature}</span>
+                  <li key={index} style={{display: 'flex', alignItems: 'center'}}>
+                    <span style={{color: 'var(--brand)', marginRight: '12px', fontWeight: 'bold'}}>✓</span>
+                    <span className="le-body">{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              <button 
-                className={`w-full py-3 px-6 rounded-md font-bold transition ${
-                  plan.popular 
-                    ? 'btn-primary' 
-                    : 'btn-secondary'
-                }`}
+              <button
+                className={plan.popular ? 'le-btnPrimary' : 'le-btnGhost'}
+                style={{width: '100%'}}
               >
                 {plan.cta}
               </button>
@@ -101,12 +107,12 @@ export default function PricingPage() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-400 mb-4">
+        <div className="text-center">
+          <p className="le-body" style={{color: 'var(--text-subtle)', marginBottom: 'var(--sp-16)'}}>
             All plans include a 14-day free trial. No credit card required.
           </p>
-          <p className="text-sm text-gray-500">
-            Need something custom? <a href="/contact" className="text-[#1DB954] hover:underline">Contact us</a>
+          <p className="le-meta">
+            Need something custom? <a href="/contact" style={{color: 'var(--brand)', textDecoration: 'none'}} className="le-animate">Contact us</a>
           </p>
         </div>
       </div>

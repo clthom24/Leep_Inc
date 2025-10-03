@@ -37,22 +37,22 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="about-page">
-      <div className="container mx-auto px-6 py-12">
+    <div className="le-page">
+      <div className="le-section">
         
         {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="section-title">About Leep Audio</h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        <div className="text-center">
+          <h1 className="le-h1" style={{color: 'var(--brand)', marginBottom: 'var(--sp-16)'}}>About Leep Audio</h1>
+          <p className="le-body" style={{fontSize: '18px', color: 'var(--text-subtle)', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6'}}>
             Share your music with others, enable them to remix your work, and network with other artists. 
             We're building the future of music collaboration.
           </p>
         </div>
 
         {/* Mission Section */}
-        <div className="card-base mb-16">
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Mission</h2>
-          <p className="text-lg text-gray-300 leading-relaxed text-center max-w-4xl mx-auto">
+        <div className="le-panel">
+          <h2 className="le-h2 text-center" style={{marginBottom: 'var(--sp-20)'}}>Our Mission</h2>
+          <p className="le-body text-center" style={{fontSize: '16px', lineHeight: '1.7', maxWidth: '800px', margin: '0 auto'}}>
             Leep Audio exists to break down the barriers between musicians. We provide a platform where 
             artists can share stems, collaborate on projects, and discover new creative partnerships. 
             Whether you're a bedroom producer or a touring musician, we believe everyone has something 
@@ -61,50 +61,50 @@ export default function AboutPage() {
         </div>
 
         {/* Values Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Our Values</h2>
-          <div className="grid md:grid-cols-2 gap-6">
+        <div>
+          <h2 className="le-h2 text-center" style={{marginBottom: 'var(--sp-24)'}}>Our Values</h2>
+          <div className="le-grid" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
             {values.map((value, index) => (
-              <div key={index} className="card-base">
-                <h3 className="text-xl font-bold mb-3" style={{color: 'var(--color-accent)'}}>{value.title}</h3>
-                <p className="text-gray-300">{value.description}</p>
+              <div key={index} className="le-card">
+                <h3 className="le-h3" style={{color: 'var(--brand)', marginBottom: 'var(--sp-12)'}}>{value.title}</h3>
+                <p className="le-body">{value.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Team Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Meet the Team</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+        <div>
+          <h2 className="le-h2 text-center" style={{marginBottom: 'var(--sp-24)'}}>Meet the Team</h2>
+          <div className="le-grid" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'}}>
             {teamMembers.map((member, index) => (
-              <div key={index} className="card-base text-center">
-                <div className="w-24 h-24 bg-gray-600 rounded-full mx-auto mb-4"></div>
-                <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                <p className="font-semibold mb-3" style={{color: 'var(--color-accent)'}}>{member.role}</p>
-                <p className="text-gray-300 text-sm">{member.bio}</p>
+              <div key={index} className="le-card text-center">
+                <div style={{width: '80px', height: '80px', backgroundColor: 'var(--surface-hover)', borderRadius: '50%', margin: '0 auto var(--sp-16) auto'}}></div>
+                <h3 className="le-h3" style={{marginBottom: 'var(--sp-8)'}}>{member.name}</h3>
+                <p className="le-meta" style={{color: 'var(--brand)', fontWeight: '600', marginBottom: 'var(--sp-12)'}}>{member.role}</p>
+                <p className="le-body" style={{fontSize: '13px'}}>{member.bio}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Story Section */}
-        <div className="card-base mb-16">
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Story</h2>
-          <div className="prose prose-lg text-gray-300 max-w-4xl mx-auto">
-            <p className="mb-4">
-              Leep Audio was born from a simple frustration: it was too hard for musicians to collaborate 
-              across distances. Our founder, Alex, was working on a track and wanted to add live drums, 
+        <div className="le-panel">
+          <h2 className="le-h2 text-center" style={{marginBottom: 'var(--sp-20)'}}>Our Story</h2>
+          <div style={{maxWidth: '800px', margin: '0 auto'}}>
+            <p className="le-body" style={{marginBottom: 'var(--sp-16)', lineHeight: '1.7'}}>
+              Leep Audio was born from a simple frustration: it was too hard for musicians to collaborate
+              across distances. Our founder, Alex, was working on a track and wanted to add live drums,
               but couldn't find a way to easily share stems and get quality recordings back.
             </p>
-            <p className="mb-4">
-              That experience sparked the idea for a platform dedicated to musical collaboration. We started 
-              building in 2023 with the vision of creating a space where any musician could share their work, 
+            <p className="le-body" style={{marginBottom: 'var(--sp-16)', lineHeight: '1.7'}}>
+              That experience sparked the idea for a platform dedicated to musical collaboration. We started
+              building in 2023 with the vision of creating a space where any musician could share their work,
               find collaborators, and create something bigger than they could alone.
             </p>
-            <p>
-              Today, we're proud to serve thousands of artists worldwide, facilitating collaborations that 
-              span genres, continents, and creative boundaries. This is just the beginning of our journey 
+            <p className="le-body" style={{lineHeight: '1.7'}}>
+              Today, we're proud to serve thousands of artists worldwide, facilitating collaborations that
+              span genres, continents, and creative boundaries. This is just the beginning of our journey
               to democratize music creation.
             </p>
           </div>
@@ -112,13 +112,13 @@ export default function AboutPage() {
 
         {/* CTA Section */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Ready to Join the Community?</h2>
-          <p className="text-gray-300 mb-6">
+          <h2 className="le-h2" style={{marginBottom: 'var(--sp-16)'}}>Ready to Join the Community?</h2>
+          <p className="le-body" style={{color: 'var(--text-subtle)', marginBottom: 'var(--sp-20)'}}>
             Start collaborating with musicians from around the world today.
           </p>
-          <div className="flex justify-center gap-4">
-            <a href="/signup" className="btn-primary">Get Started Free</a>
-            <a href="/contact" className="btn-secondary">Contact Us</a>
+          <div style={{display: 'flex', justifyContent: 'center', gap: 'var(--sp-16)', flexWrap: 'wrap'}}>
+            <a href="/signup" className="le-btnPrimary">Get Started Free</a>
+            <a href="/contact" className="le-btnGhost">Contact Us</a>
           </div>
         </div>
 
