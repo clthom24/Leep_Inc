@@ -13,8 +13,12 @@ const CASES = [
     title: "Browse music you’ll actually love",
     blurb: "Powerful discovery tools help you find new artists, genres, and sounds.",
     bullets: ["Smart filters", "Creator tags", "Save to playlists"],
-    media: "/Mockups/Upload.gif",
+    media: "/Mockups/Animation.gif",
     accent: "#4fc3f7",
+    fit: "contain",         // ← show entire GIF, no cropping
+    ratio: "16 / 9",        // ← wider frame to match the GIF
+    pos: "center",          // ← keep centered (or "center top")
+    minh: "420px",     
   },
   {
     id: "collaborate",
@@ -22,8 +26,12 @@ const CASES = [
     title: "Collaborate with artists in real time",
     blurb: "Share ideas, comment on stems, and track versions—right in the browser.",
     bullets: ["Inline comments", "Versioning", "Notifications"],
-    media: "/Mockups/collab.webp",
+    media: "/Mockups/Animation.gif",
     accent: "#a78bfa",
+    fit: "contain",         // ← show entire GIF, no cropping
+    ratio: "16 / 9",        // ← wider frame to match the GIF
+    pos: "center",          // ← keep centered (or "center top")
+    minh: "420px",     
   },
   {
     id: "remix",
@@ -33,6 +41,10 @@ const CASES = [
     bullets: ["One-click stem import", "Tempo match", "Non-destructive edits"],
     media: "/Mockups/Animation.gif",
     accent: "#76d7ff",
+    fit: "contain",         // ← show entire GIF, no cropping
+    ratio: "16 / 9",        // ← wider frame to match the GIF
+    pos: "center",          // ← keep centered (or "center top")
+    minh: "420px",     
   },
   {
     id: "share",
@@ -40,8 +52,12 @@ const CASES = [
     title: "Share stems securely",
     blurb: "Granular access controls and expiring links keep your work protected.",
     bullets: ["Role-based access", "Expiring links", "Download controls"],
-    media: "/Mockups/userinterface.png",
+    media: "/Mockups/Animation.gif",
     accent: "#67e8f9",
+    fit: "contain",         // ← show entire GIF, no cropping
+    ratio: "16 / 9",        // ← wider frame to match the GIF
+    pos: "center",          // ← keep centered (or "center top")
+    minh: "420px",     
   },
 ];
 
@@ -62,7 +78,12 @@ export default function UseCasesStackSection() {
       >
         {CASES.map((c, i) => (
           <ScrollStackItem key={c.id} itemClassName={`stack-card ${i % 2 ? "alt" : ""}`}>
-            <div className="stack-card-inner" style={{ ["--accent"]: c.accent }}>
+            <div className="stack-card-inner"     style={{
+              "--accent": c.accent,
+              "--fit": c.fit,
+              "--ratio": c.ratio,
+              "--pos": c.pos,
+              "--minh": c.minh,}}>
               {/* Media */}
               <div className="stack-media">
                 {/* GIFs and WEBP stills both work in <img> */}
