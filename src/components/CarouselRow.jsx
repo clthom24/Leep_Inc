@@ -1,135 +1,56 @@
-import React, { useMemo, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
-import MediaCard from "./MediaCard";
+// src/components/CarouselRow.jsx
+import React, { useRef } from "react";
+import styles from "../styles/home-carousels.module.css"; 
 
-/**
- * Animated, Netflix-like carousel row:
- * - Smooth arrows (scroll by ~3 cards)
- * - Drag-to-scroll (mouse & touch) with momentum feel
- * - Cards scale on hover (handled in MediaCard)
- * - Keyboard arrows when the track is focused
- */
 export default function CarouselRow({ title, items = [] }) {
   const trackRef = useRef(null);
-  const stateRef = useRef({ isDown: false, startX: 0, scrollLeft: 0 });
 
-  const scrollByCards = useCallback((dir = 1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const card = el.querySelector(".row-item");
-    const delta = (card?.clientWidth || 180) * 3.2; // ~3 cards
-    el.scrollBy({ left: dir * delta, behavior: "smooth" });
-  }, []);
-
-  // Drag (mouse)
-  const onMouseDown = (e) => {
-    const el = trackRef.current; if (!el) return;
-    stateRef.current.isDown = true;
-    stateRef.current.startX = e.pageX - el.offsetLeft;
-    stateRef.current.scrollLeft = el.scrollLeft;
-    el.classList.add("dragging");
+  const scrollBy = (dx) => {
+    trackRef.current?.scrollBy({ left: dx, behavior: "smooth" });
   };
-  const endDrag = () => {
-    stateRef.current.isDown = false;
-    const el = trackRef.current; el?.classList.remove("dragging");
-  };
-  const onMouseMove = (e) => {
-    const el = trackRef.current; if (!el || !stateRef.current.isDown) return;
-    e.preventDefault();
-    const x = e.pageX - el.offsetLeft;
-    const walk = (x - stateRef.current.startX) * 1.2;
-    el.scrollLeft = stateRef.current.scrollLeft - walk;
-  };
-
-  // Touch drag
-  const onTouchStart = (e) => {
-    const el = trackRef.current; if (!el) return;
-    stateRef.current.isDown = true;
-    stateRef.current.startX = e.touches[0].clientX - el.offsetLeft;
-    stateRef.current.scrollLeft = el.scrollLeft;
-  };
-  const onTouchMove = (e) => {
-    const el = trackRef.current; if (!el || !stateRef.current.isDown) return;
-    const x = e.touches[0].clientX - el.offsetLeft;
-    const walk = (x - stateRef.current.startX) * 1.2;
-    el.scrollLeft = stateRef.current.scrollLeft - walk;
-  };
-  const onTouchEnd = () => { stateRef.current.isDown = false; };
-
-  // Keyboard
-  const onKeyDown = (e) => {
-    if (e.key === "ArrowRight") scrollByCards(1);
-    if (e.key === "ArrowLeft") scrollByCards(-1);
-  };
-
-  const nodes = useMemo(
-    () =>
-      items.map((it, i) => (
-        <MediaCard
-          key={`${it.title}-${i}`}
-          title={it.title}
-          subtitle={it.subtitle}
-          artUrl={it.artUrl}
-          badge={it.badge}
-        />
-      )),
-    [items]
-  );
 
   return (
-    <section className="section">
-      <motion.h2
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-      >
-        {title}
-      </motion.h2>
+    <section className={styles.section}>
+      <h2>{title}</h2>
 
-      <div className="row-viewport">
-        <motion.button
-          className="row-arrow left"
+      <div className={styles["row-viewport"]}>
+        <button
+          className={`${styles["row-arrow"]} ${styles.left}`}
           aria-label="Scroll left"
-          onClick={() => scrollByCards(-1)}
-          initial={{ opacity: 0 }}
-          whileHover={{ scale: 1.06 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
+          onClick={() => scrollBy(-320)}
+          type="button"
         >
           ‹
-        </motion.button>
+        </button>
 
-        <motion.div
-          className="row-track"
-          role="listbox"
-          tabIndex={0}
-          ref={trackRef}
-          onMouseDown={onMouseDown}
-          onMouseUp={endDrag}
-          onMouseLeave={endDrag}
-          onMouseMove={onMouseMove}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onKeyDown={onKeyDown}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25 }}
-        >
-          {nodes}
-        </motion.div>
+        <div ref={trackRef} className={styles["row-track"]} tabIndex={0}>
+          {items.map((it, i) => (
+            <article className={`${styles["row-item"]} ${styles["media-card"]}`} key={i}>
+              <div className={styles["media-art"]}>
+                {it.badge && <span className={styles.badge}>{it.badge}</span>}
+                {/* image or placeholder */}
+                {it.artUrl ? (
+                  <img className={styles["media-art__img"]} src={it.artUrl} alt="" />
+                ) : (
+                  <span>Artwork</span>
+                )}
+              </div>
+              <div className={styles["media-meta"]}>
+                <p className={styles["media-title"]}>{it.title}</p>
+                <p className={styles["media-sub"]}>{it.subtitle}</p>
+              </div>
+            </article>
+          ))}
+        </div>
 
-        <motion.button
-          className="row-arrow right"
+        <button
+          className={`${styles["row-arrow"]} ${styles.right}`}
           aria-label="Scroll right"
-          onClick={() => scrollByCards(1)}
-          initial={{ opacity: 0 }}
-          whileHover={{ scale: 1.06 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
+          onClick={() => scrollBy(320)}
+          type="button"
         >
           ›
-        </motion.button>
+        </button>
       </div>
     </section>
   );

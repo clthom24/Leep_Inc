@@ -1,27 +1,27 @@
+// src/pages/SignedOut/index.jsx
 import React, { useMemo } from "react";
 import CarouselRow from "../../components/CarouselRow";
-import "../../styles/home-carousels.css";
+import styles from "../../styles/home-carousels.module.css"; // <-- module import
 
-/** helper to generate placeholder content */
+// helper to generate placeholder content
 const makeItems = (label, count = 12) =>
   Array.from({ length: count }).map((_, i) => ({
     title: `${label} ${i + 1}`,
-    subtitle: i % 2 ? "Artist Name" : "Various Artists",
-    // Use real art URLs if you have them, otherwise picsum placeholder:
+    subtitle: i % 2 ? "Artist Name" : "Playlist • Mixed",
     artUrl: `https://picsum.photos/seed/${label}-${i}/400/400`,
-    badge: i < 5 && label === "Trending" ? "Hot" : undefined,
+    badge: i === 0 && label === "Continue" ? "Resume" : undefined,
   }));
 
-export default function HomeSignedOut() {
-  const trending = useMemo(() => makeItems("Trending", 14), []);
-  const latest   = useMemo(() => makeItems("Latest", 16), []);
-  const nearYou  = useMemo(() => makeItems("NearYou", 12), []);
+export default function SignedOut() {
+  const continueListening = useMemo(() => makeItems("Continue", 18), []);
+  const forYou = useMemo(() => makeItems("ForYou", 15), []);
+  const trendingArtists = useMemo(() => makeItems("TrendingArtist", 14), []);
 
   return (
-    <div className="home-wrap">
-      <CarouselRow title="Today’s Trending Songs" items={trending} />
-      <CarouselRow title="Latest Songs" items={latest} />
-      <CarouselRow title="Artists Near You" items={nearYou} />
+    <div className={styles["home-wrap"]}>
+      <CarouselRow title="Continue Listening" items={continueListening} />
+      <CarouselRow title="Recommended For You" items={forYou} />
+      <CarouselRow title="Trending Artists" items={trendingArtists} />
     </div>
   );
 }
