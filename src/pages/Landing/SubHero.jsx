@@ -101,12 +101,13 @@ export default function SubHero() {
           </p>
 
           <div className={styles.subHeroButtons}>
-            <StarBorder as={Link} to="/signup" className={styles.primaryBtn}>
+            <StarBorder as={Link} to="/sign-up" className={styles.primaryBtn}>
               Sign Up Free
             </StarBorder>
 
+
             {/* Plain secondary button */}
-            <Link to="/login" className={styles.secondaryBtn}>
+            <Link to="/sign-in" className={styles.secondaryBtn}>
               Sign In
             </Link>
           </div>

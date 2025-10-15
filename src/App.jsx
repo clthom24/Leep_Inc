@@ -29,6 +29,7 @@ export default function App() {
         <Route path="/discovery" element={<DiscoveryPage />} />
         <Route path="/collab" element={<CollaborationPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignInPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Auth-only (with shared layout) */}
