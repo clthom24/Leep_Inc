@@ -1,9 +1,4 @@
-
-export default function CollaborationPage() {
-  return (
-    <div className="p-6">
-      <h1 className="section-title">Collaboration</h1>
-      <p>Submit songs, view remixes, and feedback.</p>
-    </div>
-  );
+// keep header+footer only on these routes for now
+export default function Page() {
+  return null; // no page content yet
 }

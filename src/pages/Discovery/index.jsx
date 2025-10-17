@@ -1,8 +1,4 @@
-export default function DiscoveryPage() {
-  return (
-    <div className="p-6">
-      <h1 className="section-title">Discovery</h1>
-      <p>Trending songs and artists here.</p>
-    </div>
-  );
+// keep header+footer only on these routes for now
+export default function Page() {
+  return null; // no page content yet
 }
