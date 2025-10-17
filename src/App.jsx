@@ -13,6 +13,8 @@ import DiscoveryPage from "./pages/Discovery";
 import CollaborationPage from "./pages/Collaboration";
 import SignInPage from './pages/Authentication/sign-In';
 import ForgotPasswordPage from './pages/Authentication/passwordReset';
+import MyMusicPage from "./pages/My-Music/my-Music";
+import EventsPage from "./pages/Events/events";
 import AppLayout from "./components/common/AppLayout/AppLayout";
 import MessageDashboardPage from "./pages/Messages/MessageDashboard";
 import Messages from "./pages/Messages/Messages";
@@ -46,6 +48,8 @@ export default function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/liked" element={<LikedPage />} />
           <Route path="/playlists/*" element={<PlaylistsPage />} />
+          <Route path="/my-music" element ={<MyMusicPage />} />
+          <Route path="/events" element ={<EventsPage />} />
           
           <Route path="/messagedashboard" element={<MessageDashboardPage />}>
           <Route index element={<Messages />} />        {/* default tab */}
