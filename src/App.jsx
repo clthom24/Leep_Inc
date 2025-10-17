@@ -1,38 +1,70 @@
-// src/App.jsx
-import { Routes, Route, Navigate } from "react-router-dom";
-import AppLayout from "./components/layout/AppLayout.jsx";
+// =============================================
+// File: src/App.jsx
+// Purpose: Top-level routes. Public pages render alone;
+//          auth-only pages are wrapped with AppLayout (Sidebar + Outlet).
+// =============================================
 
-import SignedOut from "./pages/SignedOut/index.jsx";
-import HomeSignedIn from "./pages/HomeSignedIn/index.jsx";
-import Search from "./pages/Search/index.jsx";
-import Profile from "./pages/Profile/index.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/Landing";
+import LikedPage from "./pages/Liked";
+import PlaylistsPage from "./pages/Playlists";
+import ProfilePage from "./pages/Profile";
+import DiscoveryPage from "./pages/Discovery";
+import CollaborationPage from "./pages/Collaboration";
+import SignInPage from './pages/Authentication/sign-In';
+import ForgotPasswordPage from './pages/Authentication/passwordReset';
+import MyMusicPage from "./pages/My-Music/my-Music";
+import EventsPage from "./pages/Events/events";
+import AppLayout from "./components/common/AppLayout/AppLayout";
+import MessageDashboardPage from "./pages/Messages/MessageDashboard";
+import Messages from "./pages/Messages/Messages";
+import Requests from "./pages/Messages/Requests";
+import AboutPage from "./pages/About";
+import ContactPage from "./pages/Contact";
+import PricingPage from "./pages/Pricing";
+
+function PrivateRoute({ children }) {
+  // TODO: add auth checks; for now pass through
+  return children;
+}
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<AppLayout />}>
-        {/* ---------- Signed OUT ---------- */}
-        <Route index element={<SignedOut />} />
-        <Route path="search" element={<Search />} />
-        <Route path="pricing" element={<div />} />
-        <Route path="help" element={<div />} />
-        <Route path="notifications" element={<div />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/discovery" element={<DiscoveryPage />} />
+        <Route path="/collab" element={<CollaborationPage />} />
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignInPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
 
-        {/* ---------- Signed IN (/home/...) ---------- */}
-        <Route path="home" element={<HomeSignedIn />} />
-        <Route path="home/search" element={<Search />} />
-        <Route path="home/profile" element={<Profile />} />
-        <Route path="home/pricing" element={<div />} />
-        <Route path="home/help" element={<div />} />
-        <Route path="home/notifications" element={<div />} />
+        {/* Auth-only (with shared layout) */}
+        <Route
+          element={
+            <PrivateRoute>
+              <AppLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/liked" element={<LikedPage />} />
+          <Route path="/playlists/*" element={<PlaylistsPage />} />
+          <Route path="/my-music" element ={<MyMusicPage />} />
+          <Route path="/events" element ={<EventsPage />} />
+          
+          <Route path="/messagedashboard" element={<MessageDashboardPage />}>
+          <Route index element={<Messages />} />        {/* default tab */}
+          <Route path="messages" element={<Messages />} />
+          <Route path="requests" element={<Requests />} />
+          </Route>
 
-        {/* Optional mirror */}
-        <Route path="profile" element={<Profile />} />
-
-        {/* Section-aware fallbacks */}
-        <Route path="home/*" element={<Navigate to="/home" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

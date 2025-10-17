@@ -1,0 +1,91 @@
+/* RequestsPanel.module.css */
+
+.panelWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #141821;
+  border-radius: 0 12px 12px 12px;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.songList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-top: 8px;
+}
+
+.songItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #1e2633;
+  transition: background 0.2s;
+}
+
+.songItem:hover {
+  background: #232c3a;
+}
+
+.albumArt {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.songInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color: #e8ebf0;
+}
+
+.songName {
+  font-weight: 600;
+}
+
+.albumTitle {
+  font-size: 14px;
+  color: #a0a8b6;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center; /* center vertically */
+}
+
+.actionButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.approve {
+  background: #4fc3f7;
+  color: #141821;  /* dark text */
+  font-weight: bold;
+  text-shadow: 0 0 1px #141821; /* sharpens edges */
+}
+
+.deny {
+  background: #ff5252; /* red button */
+  color: #000;         /* black X */
+  font-weight: bold;
+  text-shadow: 0 0 1px #000; /* subtle sharpening */
+}
+

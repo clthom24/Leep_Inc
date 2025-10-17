@@ -1,0 +1,89 @@
+/* =============================================
+   File: src/components/common/styles/StarBorder.module.css
+   Theme-aware star border (uses --brand, --border if present)
+   ============================================= */
+
+.container {
+  /* sizing */
+  display: inline-block;
+  position: relative;
+  padding: var(--sb-thickness, 2px) 0; /* border thickness space */
+  border-radius: 20px;
+  overflow: hidden;
+
+  /* allow passed button styles to set the background */
+  background: transparent;
+
+  /* focus ring for accessibility */
+  outline: none;
+}
+.container:focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(79,195,247,.35),
+    0 0 0 4px rgba(79,195,247,.15);
+}
+
+/* Animated radial “stars” along top/bottom */
+.gradBottom,
+.gradTop {
+  position: absolute;
+  width: 300%;
+  height: 50%;
+  opacity: 0.7;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+
+  /* color + motion via vars */
+  background: radial-gradient(circle, var(--sb-color, #4fc3f7), transparent 10%);
+  animation-duration: var(--sb-speed, 6s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+
+  /* GPU nudge to avoid flicker */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.gradBottom {
+  bottom: -12px;
+  right: -250%;
+  animation-name: star-bottom-move;
+}
+
+.gradTop {
+  top: -12px;
+  left: -250%;
+  animation-name: star-top-move;
+}
+
+/* The inner surface: inherits bg from the outer button class */
+.inner {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Inherit rounded shape and let button styles control visuals */
+  border-radius: inherit;
+
+  /* Border defaults to theme border if available */
+  border: 1px solid var(--border, #2a2f3a);
+
+  /* Use the outer element’s background if it sets one */
+  background: var(--btn-bg, inherit); /* falls back to inherit if you set --btn-bg */
+
+  /* Padding/text can be controlled by the passed class (e.g., .primaryBtn) */
+}
+
+/* Keyframes */
+@keyframes star-bottom-move {
+  0%   { transform: translate(0%, 0%);   opacity: 1; }
+  100% { transform: translate(-100%, 0%); opacity: 0; }
+}
+@keyframes star-top-move {
+  0%   { transform: translate(0%, 0%);   opacity: 1; }
+  100% { transform: translate(100%, 0%); opacity: 0; }
+}

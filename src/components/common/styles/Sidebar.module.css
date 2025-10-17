@@ -1,0 +1,54 @@
+.aside {
+  background: #141821;
+  border-right: 1px solid #2a2f3a;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  position: sticky;
+  top: 0;
+  height: 100vh;  /* fills the shell’s column */
+}
+
+.toggle {
+  align-self: flex-end;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #2a2f3a;
+  background: #0f1115;
+  color: #e8ebf0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.toggle:hover { background: #1a1f2a; }
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #e8ebf0;
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.link:hover { background: rgba(232,235,240,0.06); border-color: #2a2f3a; }
+
+.icon {
+  width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Collapsed rail */
+.isCollapsed .label { display: none; }
+.isCollapsed .link { justify-content: center; padding: 10px 0; }
+.isCollapsed .toggle { align-self: center; }
