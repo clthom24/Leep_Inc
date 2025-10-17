@@ -1,12 +1,139 @@
-/* src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Reset browser default body margin */
-html, body, #root {
-  height: 100%;
-  background-color: #121212; /* match your dark theme */
-}
-
+/* ============================= */
+/* =========== GENERAL ========= */
+/* ============================= */
 body {
-  margin: 0;
-  font-family: 'Roboto', sans-serif; /* your chosen font */
+  @apply bg-secondary text-white font-sans antialiased;
 }
+
+/* ============================= */
+/* ======= TYPOGRAPHY ========= */
+/* ============================= */
+.section-title {
+  @apply text-2xl md:text-3xl font-bold mb-4;
+}
+.text-subtle {
+  @apply text-gray-400;
+}
+.text-primary {
+  @apply text-yellow-400 font-semibold;
+}
+
+/* ============================= */
+/* ========= BUTTONS ========== */
+/* ============================= */
+.btn-primary {
+  @apply bg-yellow-400 text-black py-2 px-4 rounded-md font-bold hover:bg-yellow-500 transition;
+}
+.btn-secondary {
+  @apply bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-700;
+}
+.btn-upload {
+  @apply inline-flex items-center gap-2 btn-primary;
+}
+
+/* ============================= */
+/* ========== CARDS =========== */
+/* ============================= */
+.card-base {
+  @apply bg-muted p-4 rounded-xl shadow-card;
+}
+.card-hover {
+  @apply hover:bg-gray-800 transition-colors;
+}
+
+/* ============================= */
+/* ========= PROFILE ========== */
+/* ============================= */
+.profile-header {
+  @apply flex flex-col md:flex-row items-center gap-6 mb-6;
+}
+.avatar-large {
+  @apply w-32 h-32 rounded-full object-cover;
+}
+.profile-stats {
+  @apply flex gap-8 mb-4;
+}
+.stat {
+  @apply flex flex-col items-center;
+}
+.stat-value {
+  @apply text-xl font-bold;
+}
+.stat-label {
+  @apply text-gray-400;
+}
+
+/* ============================= */
+/* ======= TOP SONGS LIST ===== */
+/* ============================= */
+.song-list {
+  @apply list-none space-y-2;
+}
+.song-item {
+  @apply flex items-center justify-between p-2 rounded-md hover:bg-gray-800;
+}
+.play-icon {
+  @apply text-white w-6 h-6;
+}
+.track-length {
+  @apply text-gray-400 text-sm;
+}
+
+/* ============================= */
+/* ======= ABOUT SECTION ====== */
+/* ============================= */
+.about-panel {
+  @apply rounded-panel bg-gray-800 p-4;
+}
+
+/* ============================= */
+/* ===== PRESS COVERAGE ======= */
+/* ============================= */
+.press-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+}
+.press-card {
+  @apply card-base flex flex-col;
+}
+.press-date {
+  @apply text-xs text-gray-500;
+}
+
+/* ============================= */
+/* ======== DISCOVERY ========= */
+/* ============================= */
+.discovery-carousel {
+  @apply flex overflow-x-auto space-x-4;
+}
+.discovery-card {
+  @apply card-base min-w-[200px] card-hover;
+}
+
+/* ============================= */
+/* ====== COLLABORATION ======= */
+/* ============================= */
+.upload-form {
+  @apply card-base mb-6;
+}
+.feedback-list {
+  @apply space-y-3;
+}
+.feedback-item {
+  @apply flex items-start gap-3 p-2 bg-gray-800 rounded-md;
+}
+.timestamp-badge {
+  @apply badge bg-primary text-black;
+}
+.mix-card {
+  @apply card-base;
+}
+
+/* ============================= */
+/* ======== UTILITIES ========= */
+/* ============================= */
+.mt-6 { @apply mt-6; }
+.mb-6 { @apply mb-6; }
