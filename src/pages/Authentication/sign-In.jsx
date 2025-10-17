@@ -6,6 +6,7 @@ import appleIcon from '/src/assets/apple-icon.svg';
 import googleIcon from '/src/assets/google-icon.svg';
 import linkedInIcon from '/src/assets/linkedin-icon.svg';
 import spotifyIcon from '/src/assets/spotify-icon.svg';
+import facebookIcon from '/src/assets/facebook-icon.svg'
 
 export default function SignInPage() {
   const location = useLocation();
@@ -65,6 +66,8 @@ export default function SignInPage() {
       {/* Log In View */}
       {!isSignUp && (
         <div className={styles.box} style={{ marginTop: '3rem' }}>
+          <img src="/src/assets/leep-logo.png" alt="Corner Icon" className={styles.leepLogo} />
+
           <div className={styles.boxLabel}>Log In</div>
 
           <div>
@@ -129,6 +132,9 @@ export default function SignInPage() {
             <button type="button" className={`${styles.socialBtn} ${styles.google}`} onClick={() => handleSocial('Spotify')}>
               <img src={spotifyIcon} alt="Spotify logo" width={28} height={28} />
             </button>
+            <button type="button" className={`${styles.socialBtn} ${styles.facebook}`} onClick={() => handleSocial('Facebook')}>
+              <img src={facebookIcon} alt="Facebook logo" style={{ width: '28px', height: '28px'}} />
+            </button>
           </div>
 
           <Link to="/discovery" className={styles.switchSignInScreen} style={{ margin: '0.25rem 0 0' }}>
@@ -140,6 +146,8 @@ export default function SignInPage() {
       {/* Sign Up View */}
       {isSignUp && (
         <div className={styles.box}>
+          <img src="/src/assets/leep-logo.png" alt="Corner Icon" className={styles.leepLogo} />
+
           <div className={styles.boxLabel}>Sign Up</div>
 
           <div>
@@ -215,6 +223,9 @@ export default function SignInPage() {
             </button>
             <button type="button" className={`${styles.socialBtn} ${styles.google}`} onClick={() => handleSocial('Spotify')}>
               <img src={spotifyIcon} alt="Spotify logo" width={28} height={28} />
+            </button>
+            <button type="button" className={`${styles.socialBtn} ${styles.facebook}`} onClick={() => handleSocial('Facebook')}>
+              <img src={facebookIcon} alt="Facebook logo" style={{ width: '28px', height: '28px'}} />
             </button>
           </div>
 

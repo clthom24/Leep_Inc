@@ -11,13 +11,24 @@
 }
 
 .box {
-  background-color: #141821;
+  background-color: #1a1a29;
   border-color: #4fc3f7;
   border-style: solid;
   border-radius: 1rem;
-  border-width: 0.0625rem;
+  border-width: 0.125rem;
   padding: 1.125rem;
+  position: relative;
   width: 22rem;
+}
+
+.leepLogo {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 6.5rem;
+  height: auto;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .boxLabel {
@@ -146,21 +157,13 @@
   opacity: 70%;
 }
 
-.successMessage {
-  color: #4caf50;
-  font-size: 0.875rem;
-  margin-top: 0.625rem;
-  min-height: 1.25rem;
-  opacity: 85%;
-}
-
 .socialButtons {
   display: flex;
   flex-direction: row;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   margin-top: 0.75rem;
-  margin-right: 6rem;
+  margin-right: 2rem;
 }
 
 .socialBtn {
