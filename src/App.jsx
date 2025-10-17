@@ -17,6 +17,9 @@ import AppLayout from "./components/common/AppLayout/AppLayout";
 import MessageDashboardPage from "./pages/Messages/MessageDashboard";
 import Messages from "./pages/Messages/Messages";
 import Requests from "./pages/Messages/Requests";
+import AboutPage from "./pages/About";
+import ContactPage from "./pages/Contact";
+import PricingPage from "./pages/Pricing";
 
 function PrivateRoute({ children }) {
   // TODO: add auth checks; for now pass through
@@ -34,6 +37,9 @@ export default function App() {
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignInPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
 
         {/* Auth-only (with shared layout) */}
         <Route
