@@ -1,0 +1,199 @@
+/* Contact Page — token-first, on-brand (#4fc3f7), readable */
+
+:root {
+  /* Fallbacks; use your global tokens if present */
+  --bg: #0f1115;
+  --panel: #171a1f;
+  --panel-soft: #1b1f26;
+  --border: #2a2f37;
+  --text: #f3f5f7;
+  --text-subtle: #c9ced6;
+  --brand: #4fc3f7;
+  --brand-hover: #29b6f6;
+  --brand-press: #03a9f4;
+  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  --ring: rgba(79,195,247,0.35);
+  --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+  --sp-32: 32px; --sp-40: 40px; --sp-56: 56px; --sp-64: 64px;
+  --r-10: 10px; --r-14: 14px;
+  --t-med: 220ms;
+}
+
+/* Shell */
+.contactPage {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: grid;
+  place-items: start center;
+  padding: var(--sp-32) var(--sp-20);
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  gap: var(--sp-64);
+  justify-items: center;
+}
+
+/* Hero */
+.hero {
+  width: 100%;
+  text-align: center;
+  display: grid;
+  gap: var(--sp-16);
+}
+.pageTitle {
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0;
+}
+.lead {
+  color: var(--text-subtle);
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.8;
+  max-width: 65ch;
+  margin: 0 auto;
+}
+
+/* Methods */
+.methods { width: 100%; }
+.methodsGrid {
+  display: grid;
+  gap: var(--sp-20);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .methodsGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.card {
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-14);
+  padding: var(--sp-24);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.cardHeading {
+  font-weight: 700;
+  color: var(--brand);
+  font-size: 1.125rem;
+  margin: 0 0 var(--sp-8);
+}
+.cardBody {
+  color: var(--text-subtle);
+  line-height: 1.75;
+  font-size: 0.995rem;
+  margin: 0;
+  text-align: left;
+}
+.methodIcon {
+  font-size: 2rem;
+  margin-bottom: var(--sp-12);
+}
+.accentText { color: var(--brand); font-weight: 600; }
+
+/* Grid for form + FAQ */
+.contentGrid {
+  width: 100%;
+  display: grid;
+  gap: var(--sp-32);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 1024px) {
+  .contentGrid { grid-template-columns: 1.1fr 0.9fr; }
+}
+
+/* Panels */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-14);
+  box-shadow: var(--shadow);
+  padding: clamp(var(--sp-20), 3.5vw, var(--sp-40));
+}
+.sectionTitle {
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--brand);
+  text-align: center;
+  margin: 0 0 var(--sp-16);
+}
+
+/* Form */
+.form { display: grid; gap: var(--sp-16); }
+.formGroup { display: grid; gap: var(--sp-8); }
+.label { font-size: 0.9rem; color: var(--text); }
+.req { color: var(--brand); }
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #111419;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--r-10);
+  line-height: 1.5;
+  transition: border var(--t-med) ease, box-shadow var(--t-med) ease, background var(--t-med) ease;
+}
+.input::placeholder { color: #8c93a3; }
+.input:focus {
+  outline: 0;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--ring);
+  background: #0e1218;
+}
+.select { appearance: none; background-image: none; }
+.textarea { resize: vertical; min-height: 140px; }
+.helper { color: var(--text-subtle); font-size: 0.85rem; }
+
+/* FAQ */
+.faqColumn { display: grid; gap: var(--sp-20); }
+.faqStack { display: grid; gap: var(--sp-16); }
+
+/* Meta panel */
+.metaPanel { margin-top: var(--sp-16); }
+.metaTitle {
+  margin: 0 0 var(--sp-12);
+  font-weight: 700;
+  color: var(--text);
+}
+.metaList {
+  color: var(--text-subtle);
+  padding-left: 1rem;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+/* Buttons */
+.btnRow { display: flex; gap: var(--sp-16); justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 18px;
+  border-radius: var(--r-10);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  transition: transform var(--t-med) ease, box-shadow var(--t-med) ease, background var(--t-med) ease, color var(--t-med) ease;
+}
+.btnPrimary {
+  background: var(--brand);
+  color: #0f1115;
+  box-shadow: 0 10px 18px rgba(79,195,247,0.25);
+}
+.btnPrimary:hover {
+  transform: translateY(-3px);
+  background: var(--brand-hover);
+  box-shadow: 0 16px 28px rgba(79,195,247,0.35);
+}
+.btnPrimary:active { background: var(--brand-press); transform: translateY(-1px); }
+.btnPrimary:focus-visible { outline: 0; box-shadow: 0 0 0 3px var(--ring); }
+
+/* Small rhythm tweak */
+.formPanel, .faqColumn { margin-top: -8px; }

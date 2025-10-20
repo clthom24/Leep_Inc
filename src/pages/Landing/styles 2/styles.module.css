@@ -1,0 +1,399 @@
+/* -----------------------------------------------------------------------------
+   File: styles.module.css
+   Purpose: Landing page styles (Hero, SubHero, Artist slideshow, Reviews)
+   Drop-in: paste over your current Landing styles.module.css
+   --------------------------------------------------------------------------- */
+
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* ===== General page layout ===== */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #0f1115;
+  color: #e8ebf0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+               Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* ===== SubHero ===== */
+h2 { color: #4fc3f7; }
+
+.subHero {
+  padding: 4rem 1.5rem;
+  background-color: #141821;
+}
+
+.subHeroGrid {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+.subHeroImage {
+  height: 12rem;
+  width: 100%;
+  background-color: rgba(107,114,128,0.4);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.subHeroHeading {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #e8ebf0;
+}
+
+.subHeroText {
+  margin-top: 0.75rem;
+  color: #9aa3b2;
+}
+
+/* Button row (centered) */
+.subHeroButtons {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Primary/secondary CTAs */
+.primaryBtn {
+  background-color: #4fc3f7;
+  color: #0f1115;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: inline-flex; align-items: center; justify-content: center;
+
+  /* used by .glowBorder to preserve inner fill */
+  --btn-bg: #4fc3f7;
+  cursor: pointer;
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 1px solid #4fc3f7;
+  color: #e8ebf0;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: inline-flex; align-items: center; justify-content: center;
+
+  /* inner fill for glowBorder */
+  --btn-bg: #141821;
+  cursor: pointer;
+}
+
+/* Gradient border that glows on hover (stack with primary/secondary) */
+.glowBorder {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(var(--btn-bg, #141821), var(--btn-bg, #141821)) padding-box,
+    linear-gradient(135deg, #4fc3f7 0%, #76d7ff 50%, #a78bfa 100%) border-box;
+  background-size: 100% 100%, 200% 200%;
+  transition: box-shadow .2s ease, transform .2s ease, background-position .6s linear;
+}
+.glowBorder:hover,
+.glowBorder:focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(79,195,247,.25),
+    0 0 18px rgba(79,195,247,.45),
+    0 0 36px rgba(167,139,250,.35);
+  background-position: 0 0, 100% 0;
+  outline: none;
+}
+
+/* Hover interactions */
+.secondaryBtn:hover {
+  background-color: rgba(232,235,240,0.08);
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+}
+.primaryBtn:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  background-color: #76d7ff;
+}
+
+/* ===== Rotating feature text (SubHero) ===== */
+.rotatorLabel {
+  color: #9aa3b2;
+  font-weight: 500;
+  margin-right: 0.25rem;
+}
+.rotatorItem {
+  display: inline-block;
+  font-weight: 700;
+  color: #4fc3f7;
+  white-space: nowrap;
+  animation: fadeUp 1000ms ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Artist slideshow ===== */
+.artistSlide {
+  position: relative;
+  height: 12rem;
+  width: 100%;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #2a2f3a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  background: #141821;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+.artistContent { display: flex; align-items: center; gap: 1rem; width: 100%; }
+.artistThumb   { width: 20%; height: auto; padding: 1rem; display: flex; align-items: center; justify-content: center; background: transparent; }
+.artistPhoto   { width: 200px; height: 200px; object-fit: cover; border-radius: 0.25rem; display: block; }
+.artistInfo    { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.trendingLabel { font-size: 1.25rem; font-weight: 900; color: #4fc3f7; margin-bottom: 0.5rem; }
+.artistName    { font-size: 1.25rem; font-weight: 700; color: #e8ebf0; margin-bottom: 0.25rem; }
+.artistGenre   { font-size: 1rem; color: #9aa3b2; }
+
+.fadeIn  { animation: fadeIn 180ms ease forwards; }
+.fadeOut { animation: fadeOut 180ms ease forwards; }
+@keyframes fadeIn  { from { opacity: 0; transform: translateY(2px);} to { opacity: 1; transform: translateY(0);} }
+@keyframes fadeOut { from { opacity: 1; transform: translateY(0);} to { opacity: 0; transform: translateY(-2px);} }
+
+/* ===== Hero ===== */
+.hero {
+  padding: 4rem 1.5rem;
+  height: 250px;
+  text-align: center;
+  background: url("/hero-background.jpg") center/cover no-repeat; /* public/ asset */
+  color: #e8ebf0;
+  position: relative;
+  background-size: cover;
+  background-position: center 80%;
+  background-repeat: no-repeat;
+}
+.heroHeading {
+  margin: 0 auto;
+  max-width: 48rem;
+  font-size: 2rem;
+  font-weight: 800;
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 1.2;
+  color: #e8ebf0;
+  background-color: rgba(26,30,39,0.8);
+}
+.heroBtn {
+  margin-top: 2rem;
+  display: inline-block;
+  background-color: #4fc3f7;
+  color: #0f1115;
+  padding: 0.75rem 1.75rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.heroBtn:hover {
+  background-color: #76d7ff;
+  transform: translateY(-6px) scale(1.1);
+}
+.heroBtn:active { opacity: 0.5; }
+
+/* ===== Reviews ===== */
+.reviews {
+  padding: 4rem 1.5rem;
+  background-color: #0f1115;
+}
+.reviewsGrid {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.reviewCard {
+  background-color: #141821;
+  border: 1px solid #2a2f3a;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  transition: transform .2s ease, box-shadow .2s ease;
+  cursor: pointer;
+}
+.reviewCard:hover {
+  transform: translateY(-6px) scale(1.2);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  border-color: #e8ebf0;
+  border-width: 2px;
+}
+
+/* ===== Use Cases (scroll storytelling) ===== */
+.useCasesSection {
+  background: #0f1115;
+  padding: 6rem 1.25rem;
+}
+
+.useCasesGrid {
+  max-width: 84rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+}
+
+@media (max-width: 1024px) {
+  .useCasesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sticky visual (left) */
+.stickyVisual {
+  position: relative;
+  height: 100%;
+}
+
+@media (min-width: 1025px) {
+  .stickyVisual {
+    position: sticky;
+    top: 96px; /* keeps it visible while cards scroll */
+    align-self: start;
+  }
+}
+
+.phoneFrame {
+  position: relative;
+  border-radius: 2rem;
+  padding: 0.75rem;
+  background: linear-gradient(180deg, #171b23, #10131a);
+  border: 2px solid rgba(255,255,255,0.05);
+  outline: 2px solid var(--accent, #4fc3f7);
+  outline-offset: 0;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 80px rgba(79,195,247,0.12);
+}
+
+.phoneScreen {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1.5rem;
+  object-fit: cover;
+  background: #141821;
+  aspect-ratio: 9 / 19.5;
+}
+
+.phoneGlow {
+  position: absolute;
+  inset: -8% -6%;
+  background: radial-gradient(60% 60% at 50% 30%, rgba(79,195,247,0.25), transparent 70%),
+              radial-gradient(40% 40% at 70% 70%, rgba(167,139,250,0.2), transparent 70%);
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.visualCaption { margin-top: 1rem; }
+.captionPill {
+  display: inline-block;
+  border: 1px solid #4fc3f7;
+  color: #9aa3b2;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+.visualTitle { margin: 0.5rem 0 0.25rem; font-size: 1.5rem; font-weight: 800; color: #e8ebf0; }
+.visualBlurb { color: #9aa3b2; }
+
+/* Cards column (right) */
+.cardsCol {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.caseCard {
+  --card-bg: #141821;
+  --border: #2a2f3a;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.25rem 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  transform: translateY(18px) scale(0.98);
+  opacity: 0;
+  transition: transform .6s cubic-bezier(.2,.6,.2,1),
+              opacity .6s ease,
+              border-color .2s ease,
+              box-shadow .2s ease;
+}
+
+.caseCard:hover {
+  border-color: #e8ebf0;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+  transform: translateY(-4px) scale(1.01);
+}
+
+.inView {
+  transform: none;
+  opacity: 1;
+}
+
+.cardHeader { margin-bottom: 0.25rem; }
+.cardTag {
+  font-size: 0.8rem;
+  color: #9aa3b2;
+  border: 1px dashed var(--accent, #4fc3f7);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+.cardTitle {
+  margin: 0.35rem 0 0.35rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #e8ebf0;
+}
+.cardBlurb { color: #9aa3b2; margin: 0 0 0.5rem; }
+
+.cardList { list-style: none; padding: 0; margin: 0.25rem 0 0.75rem; }
+.cardBullet {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #c5ccd7;
+  padding: 0.25rem 0;
+}
+.bulletDot {
+  width: 8px; height: 8px; border-radius: 999px;
+  background: var(--accent, #4fc3f7);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent, #4fc3f7), transparent 60%);
+}
+
+/* Progress line animates when inView */
+.progressBar {
+  height: 3px;
+  width: 100%;
+  background: #1c2230;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent, #4fc3f7), #a78bfa);
+  transition: width 1.2s ease;
+}
+.inView .progressFill { width: 100%; }

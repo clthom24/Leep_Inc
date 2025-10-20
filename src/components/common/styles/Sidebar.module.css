@@ -8,7 +8,7 @@
 
   position: sticky;
   top: 0;
-  height: 100vh;  /* fills the shell’s column */
+  height: 100%;  /* fills the shell’s column */
 }
 
 .toggle {

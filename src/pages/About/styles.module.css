@@ -1,0 +1,252 @@
+/* About Page — Leep-consistent, token-first, readable & centered
+   Assumes global tokens exist; provides sane fallbacks. */
+
+:root {
+  /* Fallbacks only; your global theme should override these. */
+  --bg: #0f1115;
+  --panel: #171a1f;
+  --panel-soft: #1b1f26;
+  --border: #2a2f37;
+  --text: #f3f5f7;
+  --text-subtle: #c9ced6;
+  --brand: #4fc3f7; 
+  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  --sp-8: 8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-20: 20px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-40: 40px;
+  --sp-64: 64px;
+  --r-10: 10px;
+  --r-14: 14px;
+  --t-med: 220ms;
+}
+
+/* Page shell */
+.aboutPage {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: grid;
+  place-items: start center;
+  padding: var(--sp-32) var(--sp-20);
+}
+
+/* Centered column */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  gap: var(--sp-64);
+  justify-items: center;           /* center blocks */
+}
+
+/* Hero */
+.hero {
+  width: 100%;
+  text-align: center;
+  display: grid;
+  gap: var(--sp-16);
+}
+
+.pageTitle {
+  font-size: clamp(40px, 4vw, 60px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.lead {
+  color: var(--text-subtle);
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.8;
+  max-width: 70ch;
+  margin: 0 auto;
+}
+
+/* Generic panel (mission/story) */
+.panel {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-14);
+  box-shadow: var(--shadow);
+  padding: clamp(var(--sp-20), 3.5vw, var(--sp-40));
+}
+
+.sectionTitle {
+  font-size: clamp(22px, 2.3vw, 28px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--brand);
+  text-align: center;
+  margin: 0 0 var(--sp-16) 0;
+}
+
+.body {
+  color: var(--text-subtle);
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  max-width: 75ch;
+  margin: 0 auto;
+  text-align: left;                /* readable paragraphs */
+}
+
+/* Values */
+.values { width: 100%; display: grid; gap: var(--sp-24); }
+.valuesGrid {
+  display: grid;
+  gap: var(--sp-20);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .valuesGrid { grid-template-columns: 1fr 1fr; }
+}
+
+.card {
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-14);
+  padding: var(--sp-24);
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.card:hover{
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+    border-style: solid;
+    border-width: 2px;
+    border-color: #4fc3f7; ;
+}
+
+.cardHeading {
+  font-weight: 700;
+  color: var(--brand);
+  font-size: 1.125rem;
+  margin: 0 0 var(--sp-8) 0;
+}
+
+.cardBody {
+  color: var(--text-subtle);
+  line-height: 1.75;
+  font-size: 0.995rem;
+  text-align: left;
+}
+
+/* Team */
+.team { width: 100%; display: grid; gap: var(--sp-24); }
+
+.teamGrid {
+  display: grid;
+  gap: var(--sp-20);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .teamGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin: 0 auto var(--sp-16);
+  background:
+    radial-gradient(120px 120px at 30% 30%, rgba(255,255,255,0.12), transparent 40%),
+    linear-gradient(135deg, rgba(29,185,84,0.4), rgba(76,201,240,0.25));
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35), 0 0 0 2px rgba(29,185,84,0.15) inset;
+}
+
+.memberName {
+  text-align: center;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  font-size: 1.125rem;
+}
+
+.memberRole {
+  text-align: center;
+  color: var(--brand);
+  font-weight: 600;
+  margin: 0 0 var(--sp-12) 0;
+}
+
+/* Story */
+.story .content {
+  display: grid;
+  gap: var(--sp-16);
+}
+.story .content p {
+  color: var(--text-subtle);
+  line-height: 1.85;
+  text-align: left;
+  margin: 0;
+}
+
+/* CTA */
+.cta {
+  width: 100%;
+  text-align: center;
+  display: grid;
+  gap: var(--sp-16);
+}
+
+.ctaTitle {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtle {
+  color: var(--text-subtle);
+  margin: 0;
+}
+
+.btnRow {
+  display: flex;
+  gap: var(--sp-16);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--sp-8);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: var(--r-10);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    transform var(--t-med) ease,
+    box-shadow var(--t-med) ease,
+    background var(--t-med) ease,
+    color var(--t-med) ease;
+}
+
+.btnPrimary {
+  background: var(--brand);
+  color: #0f1115;
+  box-shadow: 0 10px 18px rgba(29,185,84,0.25);
+}
+.btnPrimary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px rgba(29,185,84,0.35);
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btnSecondary:hover {
+  background: rgba(232,235,240,0.06);
+  transform: translateY(-3px);
+}
+
+/* Spacing tweaks for consistent rhythm */
+.mission, .story, .values, .team { margin-top: -8px; } /* tighten top gap a hair */
