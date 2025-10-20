@@ -10,7 +10,7 @@ export default function Hero() {
       <h1 className={styles.heroHeading}>
         Collaborate, Remix, Inspire; Your Music in Limitless Possibilities
       </h1>
-      <a href="/discovery" className={styles.heroBtn}>
+      <a href="/SignedOut" className={styles.heroBtn}>
         Explore
       </a>
     </div>

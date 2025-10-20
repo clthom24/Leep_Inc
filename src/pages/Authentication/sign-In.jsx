@@ -137,7 +137,7 @@ export default function SignInPage() {
             </button>
           </div>
 
-          <Link to="/discovery" className={styles.switchSignInScreen} style={{ margin: '0.25rem 0 0' }}>
+          <Link to="/SignedOut" className={styles.switchSignInScreen} style={{ margin: '0.25rem 0 0' }}>
             Back to Discovery
           </Link>
         </div>
@@ -229,7 +229,7 @@ export default function SignInPage() {
             </button>
           </div>
 
-          <Link to="/discovery" className={styles.switchSignInScreen} style={{ margin: '0.25rem 0 0' }}>
+          <Link to="/SignedOut" className={styles.switchSignInScreen} style={{ margin: '0.25rem 0 0' }}>
             Back to Discovery
           </Link>
         </div>
