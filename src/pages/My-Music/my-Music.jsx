@@ -63,7 +63,6 @@ export default function MyMusicPage() {
   
       try {
         // 🔑 Get logged-in user (for artist_id)
-        console.log("Starting upload");
         const { data: { user } } = await supabase.auth.getUser();
         
         if (!user) throw new Error("You must be logged in to upload songs.");
@@ -662,12 +661,12 @@ export default function MyMusicPage() {
 
                 {/* Next or Finish */}
                 {uploadStep < 4 ? (
-                  <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => {console.log("Upload button clicked"); setUploadStep(uploadStep + 1);}}>
+                  <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => {setUploadStep(uploadStep + 1);}}>
                     Next
                   </button>
                 ) : (
                   <button
-                    style={{ fontSize: "0.875rem", paddingInline: "1rem" }} onClick={() => {console.log("Upload button clicked"); handleUpload();}}>
+                    style={{ fontSize: "0.875rem", paddingInline: "1rem" }} onClick={() => {handleUpload();}}>
                     Upload
                   </button>
                 )}
