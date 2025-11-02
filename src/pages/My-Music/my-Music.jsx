@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
+import { supabase } from "../../supabaseClient";
 import { FaThumbsUp, FaRandom, FaPlus, FaPencilAlt, FaRegEnvelope  } from "react-icons/fa";
 
 export default function MyMusicPage() {
@@ -53,6 +54,86 @@ export default function MyMusicPage() {
       )
     );
   }
+
+  async function handleUpload() {
+      if (uploadData.audioFiles.length === 0) {
+        alert("Please select at least one song file.");
+        return;
+      }
+  
+      try {
+        // 🔑 Get logged-in user (for artist_id)
+        console.log("Starting upload");
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) throw new Error("You must be logged in to upload songs.");
+        
+        let artworkUrl = null;
+  
+        // 1️⃣ Upload artwork (if any)
+        if (uploadData.coverArt) {
+          const safeFileName = uploadData.coverArt.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+          const artworkPath = `${user.id}/${Date.now()}_${safeFileName}`;
+          const { error: artworkError } = await supabase.storage
+            .from("artwork") // your Supabase bucket name for cover art
+            .upload(artworkPath, uploadData.coverArt);
+  
+          if (artworkError) throw artworkError;
+  
+          const { data: publicArtwork } = supabase.storage
+            .from("artwork")
+            .getPublicUrl(artworkPath);
+  
+          artworkUrl = publicArtwork.publicUrl;
+        }
+        
+        // 2️⃣ Upload each audio file
+        for (const file of uploadData.audioFiles) {
+          const audioPath = `${user.id}/${Date.now()}_${file.name}`;
+          const { error: audioError } = await supabase.storage
+            .from("audio") // your Supabase bucket for audio files
+            .upload(audioPath, file);
+          if (audioError) throw audioError;
+          
+          
+          const { data: publicAudio } = supabase.storage
+            .from("audio")
+            .getPublicUrl(audioPath);
+  
+          const audioUrl = publicAudio.publicUrl;
+  
+          // 3️⃣ Insert row into `songs` table
+          const { error: dbError } = await supabase.from("songs").insert([
+            {
+              artist_id: user.id,          // must equal auth.uid()
+              title: uploadData.title || file.name,
+              audio_url: audioUrl,
+              artwork_url: artworkUrl,
+              is_published: true,
+            },
+          ]);
+  
+          if (dbError) throw dbError;
+        }
+        
+        alert("Upload successful!");
+      } catch (err) {
+        console.error("Upload error:", err.message);
+        alert(`Upload failed: ${err.message}`);
+      } finally {
+        // Reset modal
+        setShowUploadModal(false);
+        setUploadStep(1);
+        setUploadData({
+          audioFiles: [],
+          coverArt: null,
+          title: "",
+          description: "",
+          tags: "",
+          privacy: "Public",
+        });
+      }
+    }
 
   const filteredAccounts = getFilteredAccounts();
 
@@ -581,25 +662,13 @@ export default function MyMusicPage() {
 
                 {/* Next or Finish */}
                 {uploadStep < 4 ? (
-                  <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => setUploadStep(uploadStep + 1)}>
+                  <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => {console.log("Upload button clicked"); setUploadStep(uploadStep + 1);}}>
                     Next
                   </button>
                 ) : (
-                  <button style={{fontSize: '0.875rem', paddingInline: '1rem'}}
-                    onClick={() => {
-                      setShowUploadModal(false);
-                      setUploadStep(1);
-                      setUploadData({
-                        audioFiles: [],
-                        coverArt: null,
-                        title: '',
-                        description: '',
-                        tags: '',
-                        privacy: 'Public',
-                      });
-                    }}
-                  >
-                    Upload 
+                  <button
+                    style={{ fontSize: "0.875rem", paddingInline: "1rem" }} onClick={() => {console.log("Upload button clicked"); handleUpload();}}>
+                    Upload
                   </button>
                 )}
               </div>
