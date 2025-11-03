@@ -8,6 +8,8 @@
 
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
+import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient";
 
 // ---------- Public pages ----------
 import LandingPage from "./pages/Landing";
@@ -35,16 +37,42 @@ import Requests from "./pages/Messages/Requests";
 
 // ---------- Auth logic ----------
 function useAuth() {
-  // Replace this with your real authentication logic.
-  // Example: return { isAuthenticated: Boolean(localStorage.getItem("auth")) };
-  return { isAuthenticated: true }; // Dev bypass
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    // Listen for auth changes (sign in/out)
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  return {
+    isAuthenticated: !!session,
+    loading,
+    session,
+  };
 }
 
 function PrivateRoute() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return <div style={{ textAlign: "center", padding: 40 }}>Checking login...</div>;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;
   }
+
   return <Outlet />;
 }
 

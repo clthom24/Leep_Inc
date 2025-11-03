@@ -1,7 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./styles/Sidebar.module.css";
+import { supabase } from "../../supabaseClient"; // adjust path if needed
 
 export default function Sidebar({ collapsed, onToggle }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate("/sign-in"); // redirect user after sign-out
+    } catch (error) {
+      console.error("Error signing out:", error.message);
+    }
+  };
+
   return (
     <aside className={`${styles.aside} ${collapsed ? styles.isCollapsed : ""}`}>
       <button
@@ -38,9 +50,11 @@ export default function Sidebar({ collapsed, onToggle }) {
         <span className={styles.label}>Events</span>
       </NavLink>
 
-      <NavLink to="/" className={styles.link} title="Logout">
+      {/* Logout button */}
+      <button
+        type="button" className={styles.link} title="Logout" onClick={handleLogout}>
         <span className={styles.label}>Logout</span>
-      </NavLink>
+      </button>
     </aside>
   );
 }

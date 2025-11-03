@@ -36,6 +36,27 @@
 }
 .link:hover { background: rgba(232,235,240,0.06); border-color: #2a2f3a; }
 
+button.link {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #e8ebf0;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+  background: transparent;
+}
+
+button.link:hover {
+  background: rgba(232, 235, 240, 0.06);
+  border-color: #2a2f3a;
+}
+
 .icon {
   width: 24px;
   display: inline-flex;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { supabase } from '../../supabaseClient'
 
 import appleIcon from '/src/assets/apple-icon.svg';
 import googleIcon from '/src/assets/google-icon.svg';
@@ -44,17 +45,23 @@ export default function SignInPage() {
     setShowPassword(false);
   }
 
-  function handleLogin() {
+  async function handleLogin() {
     if (!email || !password) return setErrorMessage('Please fill out all fields.');
     if (!isValidEmail(email)) return setErrorMessage('Please enter a valid email address.');
-    alert('Redirecting to user home page...');
-  }
 
-  function handleSignUp() {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return setErrorMessage(error.message);
+    navigate('/homeSignedIn');
+}
+
+  async function handleSignUp() {
     if (!firstName || !lastName || !email || !password) return setErrorMessage('Please fill out all fields.');
     if (!isValidEmail(email)) return setErrorMessage('Please enter a valid email address.');
-    alert('Redirecting to the Your Music page...');
-  }
+
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) return setErrorMessage(error.message);
+    navigate('/homeSignedIn');
+    }
 
   function handleSocial(provider) {
     const mode = isSignUp ? 'Sign Up' : 'Log In';
