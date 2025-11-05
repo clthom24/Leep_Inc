@@ -1,9 +1,7 @@
 // =============================================
 // File: src/App.jsx
 // Purpose: Top-level routing with persistent Header + Footer
-// via RootLayout. Public pages and private pages share the
-// same global chrome. Auth-only pages are still wrapped by
-// AppLayout (sidebar + Outlet) and gated by PrivateRoute.
+// via RootLayout. Public and private pages share global chrome.
 // =============================================
 
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
@@ -18,6 +16,7 @@ import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
 import PricingPage from "./pages/Pricing";
 import SignedOut from "./pages/SignedOut";
+import Legal from "./pages/Legal/Legal";
 
 // ---------- Private pages ----------
 import AppLayout from "./components/common/AppLayout/AppLayout";
@@ -35,9 +34,8 @@ import Requests from "./pages/Messages/Requests";
 
 // ---------- Auth logic ----------
 function useAuth() {
-  // Replace this with your real authentication logic.
-  // Example: return { isAuthenticated: Boolean(localStorage.getItem("auth")) };
-  return { isAuthenticated: true }; // Dev bypass
+  // Replace this with real authentication logic.
+  return { isAuthenticated: true }; // temporary dev bypass
 }
 
 function PrivateRoute() {
@@ -86,8 +84,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* ---------- GLOBAL LAYOUT (Header + Footer persistent) ---------- */}
-          <Route path="/" element={<LandingPage />} />
         <Route element={<RootLayout />}>
+          {/* Landing page (now inside RootLayout) */}
+          <Route index element={<LandingPage />} />
+
           {/* ---------- PUBLIC ---------- */}
           <Route path="/collab" element={<CollaborationPage />} />
           <Route path="/sign-in" element={<SignInPage />} />
@@ -97,6 +97,7 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/SignedOut" element={<SignedOut />} />
+          <Route path="/Legal" element={<Legal />} />
 
           {/* ---------- PRIVATE (with shared AppLayout) ---------- */}
           <Route element={<PrivateRoute />}>

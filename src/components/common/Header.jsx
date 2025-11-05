@@ -6,6 +6,7 @@
 // =============================================
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/Logo.jpg";
 
 export default function Header() {
@@ -13,13 +14,14 @@ export default function Header() {
   const navigate = useNavigate();
 
   // Temporary auth state — replace with real auth logic or context
-  const isSignedIn = location.pathname.startsWith("/profile") ||
-                     location.pathname.startsWith("/liked") ||
-                     location.pathname.startsWith("/playlists") ||
-                     location.pathname.startsWith("/my-music") ||
-                     location.pathname.startsWith("/events") ||
-                     location.pathname.startsWith("/HomeSignedIn") ||
-                     location.pathname.startsWith("/messagedashboard");
+  const isSignedIn =
+    location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/liked") ||
+    location.pathname.startsWith("/playlists") ||
+    location.pathname.startsWith("/my-music") ||
+    location.pathname.startsWith("/events") ||
+    location.pathname.startsWith("/HomeSignedIn") ||
+    location.pathname.startsWith("/messagedashboard");
 
   // Navigation paths based on App.jsx
   const homePath = isSignedIn ? "/HomeSignedIn" : "/";
@@ -32,13 +34,53 @@ export default function Header() {
   const eventsPath = "/events";
   const messagesPath = "/messagedashboard";
 
+  // Mock notifications — replace with data from your API / context
+  const [notifications, setNotifications] = useState([
+    { id: "n1", title: "New remix on your track", time: "2m", unread: true },
+    { id: "n2", title: "Alex left a comment", time: "1h", unread: true },
+    { id: "n3", title: "Payout processed", time: "Yesterday", unread: false },
+  ]);
+  const unreadCount = notifications.filter(n => n.unread).length;
+
+  // Dialog state + a11y
+  const [open, setOpen] = useState(false);
+  const popoverRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Close on click outside
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!open) return;
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setOpen(false);
+      }
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   // Search handler
   const handleSearch = (e) => {
     e.preventDefault();
     const q = new FormData(e.currentTarget).get("q")?.toString().trim() ?? "";
-    if (q) {
-      navigate(`/collab?q=${encodeURIComponent(q)}`); // Example: reuse collab page for search
-    }
+    if (q) navigate(`/collab?q=${encodeURIComponent(q)}`);
+  };
+
+  // Mark all as read (example)
+  const markAllRead = () => {
+    setNotifications((prev) => prev.map(n => ({ ...n, unread: false })));
   };
 
   return (
@@ -56,6 +98,7 @@ export default function Header() {
             name="q"
             className="search-input"
             placeholder="Search for artists or songs..."
+            aria-label="Search"
           />
           <button className="icon-button" type="submit" aria-label="Search">
             <span className="icon search" />
@@ -80,10 +123,65 @@ export default function Header() {
               <Link to={profilePath} className="icon-button" aria-label="Profile">
                 <span className="icon user" />
               </Link>
-              
-              <Link to="/notifications" className="icon-button" aria-label="Notifications">
-                <span className="icon bell" />
-              </Link>
+
+              {/* Notifications: button + popover */}
+              <div className="notif-wrapper">
+                <button
+                  ref={buttonRef}
+                  type="button"
+                  className="icon-button notif-button"
+                  aria-label="Notifications"
+                  aria-haspopup="dialog"
+                  aria-expanded={open}
+                  aria-controls="notif-popover"
+                  onClick={() => setOpen((v) => !v)}
+                >
+                  <span className="icon bell" />
+                  {unreadCount > 0 && (
+                    <span className="badge" aria-label={`${unreadCount} unread notifications`}>
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {open && (
+                  <div
+                    id="notif-popover"
+                    ref={popoverRef}
+                    role="dialog"
+                    aria-label="Notifications"
+                    className="popover"
+                  >
+                    <div className="popover-header">
+                      <span>Notifications</span>
+                      {unreadCount > 0 && (
+                        <button className="link-reset" onClick={markAllRead}>
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+
+                    {notifications.length === 0 ? (
+                      <div className="empty-state">You’re all caught up 🎉</div>
+                    ) : (
+                      <ul className="notif-list" role="menu">
+                        {notifications.map((n) => (
+                          <li key={n.id} role="menuitem" className={`notif-item ${n.unread ? "unread" : ""}`}>
+                            <div className="notif-title">{n.title}</div>
+                            <div className="notif-meta">{n.time}</div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <div className="popover-footer">
+                      <Link to="/notifications" className="btn-outline small" onClick={() => setOpen(false)}>
+                        View all
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <Link to="/contact" className="icon-button" aria-label="Contact">
                 <span className="icon contact" />

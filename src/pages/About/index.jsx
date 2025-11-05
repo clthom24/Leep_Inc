@@ -56,7 +56,7 @@ export default function AboutPage() {
         </header>
 
         {/* Mission */}
-        <section className={`${styles.panel} ${styles.mission}`}>
+        <section id="mission" className={`${styles.panel} ${styles.mission}`}>
           <h2 className={styles.sectionTitle}>Our Mission</h2>
           <p className={styles.body}>
             Leep Audio exists to break down the barriers between musicians. We provide a platform where
@@ -67,7 +67,7 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section className={styles.values}>
+        <section id="values" className={styles.values}>
           <h2 className={styles.sectionTitle}>Our Values</h2>
           <div className={styles.valuesGrid}>
             {values.map((v, i) => (
@@ -80,7 +80,7 @@ export default function AboutPage() {
         </section>
 
         {/* Team */}
-        <section className={styles.team}>
+        <section id="team" className={styles.team}>
           <h2 className={styles.sectionTitle}>Meet the Team</h2>
           <div className={styles.teamGrid}>
             {teamMembers.map((m, i) => (
@@ -95,7 +95,7 @@ export default function AboutPage() {
         </section>
 
         {/* Story */}
-        <section className={`${styles.panel} ${styles.story}`}>
+        <section id="story" className={`${styles.panel} ${styles.story}`}>
           <h2 className={styles.sectionTitle}>Our Story</h2>
           <div className={styles.content}>
             <p>

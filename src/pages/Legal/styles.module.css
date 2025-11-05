@@ -1,0 +1,208 @@
+/* ========== Legal Page (scoped CSS Module) ========== */
+
+/* Layout */
+.legalPage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar */
+.sidenav {
+  position: sticky;
+  top: 76px; /* aligns under your header */
+  align-self: start;
+}
+
+.sidenavTitle {
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 8px 0;
+}
+
+.sidenavUnderline {
+  width: 28px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 12px;
+  border-radius: 2px;
+}
+
+.nav {
+  display: grid;
+  gap: 10px;
+}
+
+/* Outline-style links (local to page) */
+.linkOutline {
+  height: 32px;
+  padding: 0 12px;
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  background: #0e1115;
+  font-size: 13px;
+  transition: box-shadow .2s ease, transform .04s ease;
+}
+
+.linkOutline:hover {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.06) inset;
+}
+
+.linkOutline:active {
+  transform: translateY(1px);
+}
+
+.linkOutline:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+}
+
+/* Main content area */
+.content {
+  display: grid;
+  gap: 28px;
+}
+
+/* Cards */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.cardTight {
+  padding-top: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleXL {
+  font-size: 24px;
+  margin: 0;
+}
+
+.titleSM {
+  font-size: 16px;
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.noteSM {
+  font-size: 12px;
+}
+
+/* Checkbox block (upload confirm) */
+.checkboxRow {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.checkboxLabel {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0e1115;
+}
+
+.checkboxInput {
+  margin-top: 3px;
+}
+
+.checkboxText {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Lists */
+.list {
+  margin: 12px 0 0 0;
+  padding-left: 18px;
+  line-height: 1.6;
+}
+
+.list li + li {
+  margin-top: 6px;
+}
+
+/* Section anchors: smooth land with header offset */
+.anchorTarget {
+  scroll-margin-top: 84px; /* header height + spacing */
+}
+
+/* Small button variant for "View all" style actions */
+.btnOutlineSmall {
+  height: 28px;
+  padding: 0 10px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #0e1115;
+  color: var(--text);
+  font-size: 12px;
+  text-decoration: none;
+  transition: box-shadow .2s ease, transform .04s ease;
+}
+
+.btnOutlineSmall:hover {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.06) inset;
+}
+
+.btnOutlineSmall:active {
+  transform: translateY(1px);
+}
+
+.btnOutlineSmall:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 70%);
+}
+
+/* Utility spacing */
+.mt6 { margin-top: 6px; }
+.mt8 { margin-top: 8px; }
+.mt10 { margin-top: 10px; }
+.mt12 { margin-top: 12px; }
+.mt16 { margin-top: 16px; }
+
+/* Visually-hidden for a11y (screen reader only) */
+.srOnly {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+  border: 0; padding: 0; margin: -1px;
+}

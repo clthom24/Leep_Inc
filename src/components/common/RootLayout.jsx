@@ -7,11 +7,14 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import ScrollToHash from "./ScrollToHash";
+
 
 export default function RootLayout() {
   return (
     <div className="app-shell">
       <Header />
+      <ScrollToHash />
       <main className="app-main">
         <Outlet />
       </main>
@@ -19,3 +22,5 @@ export default function RootLayout() {
     </div>
   );
 }
+
+

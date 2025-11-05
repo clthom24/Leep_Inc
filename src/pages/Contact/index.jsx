@@ -173,7 +173,7 @@ export default function ContactPage() {
           </div>
 
           {/* FAQ */}
-          <div className={styles.faqColumn}>
+          <div id="FAQ" className={styles.faqColumn}>
             <h2 className={styles.sectionTitle}>FAQ</h2>
             <div className={styles.faqStack}>
               {faqs.map((f, i) => (

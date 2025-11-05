@@ -174,7 +174,7 @@ h2 { color: #4fc3f7; }
 /* ===== Hero ===== */
 .hero {
   padding: 4rem 1.5rem;
-  height: 250px;
+  height: 350px;
   text-align: center;
   background: url("/hero-background.jpg") center/cover no-repeat; /* public/ asset */
   color: #e8ebf0;
