@@ -16,10 +16,8 @@ export default function Header() {
 
   // --- Track Supabase session ---
   useEffect(() => {
-    // Get initial session on mount
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
 
-    // Subscribe to auth state changes (sign in / sign out)
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
@@ -27,13 +25,18 @@ export default function Header() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // True if user is signed in
   const isSignedIn = !!session;
+  const isRecovery = localStorage.getItem("isPasswordRecovery") === "true";
+
+  // Prevents a header flicker issue when user sets a new password in password recovery
+  const isLocked = localStorage.getItem("headerLock") === "true";
+
+  const showAsSignedOut = !isSignedIn || isRecovery || isLocked;;
 
   // --- Handle Sign Out ---
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    navigate("/sign-in"); // Redirect to sign-in page
+    navigate("/sign-in");
   };
 
   // --- Search handler ---
@@ -74,7 +77,7 @@ export default function Header() {
 
         {/* Navigation */}
         <nav className="user-nav" aria-label="Header navigation">
-          {!isSignedIn && (
+          {showAsSignedOut ? (
             <>
               <Link to={aboutPath} className="btn-outline">About</Link>
               <Link to={pricingPath} className="btn-outline">Pricing</Link>
@@ -82,9 +85,7 @@ export default function Header() {
               <Link to={collabPath} className="btn-outline">Collab</Link>
               <Link to="/sign-in" className="btn-primary">Sign In</Link>
             </>
-          )}
-
-          {isSignedIn && (
+          ) : (
             <>
               <Link to={profilePath} className="icon-button" aria-label="Profile">
                 <span className="icon user" />
@@ -95,11 +96,7 @@ export default function Header() {
               <Link to="/settings" className="icon-button" aria-label="Settings">
                 <span className="icon settings" />
               </Link>
-
-              {/* Use a button for proper sign-out */}
-              <button onClick={handleSignOut} className="btn-primary">
-                Sign Out
-              </button>
+              <button onClick={handleSignOut} className="btn-primary">Sign Out</button>
             </>
           )}
         </nav>

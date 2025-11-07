@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 import { Link } from 'react-router-dom';
+import { supabase } from "../../supabaseClient";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ export default function ForgotPasswordPage() {
   }
 
   // checks email text field for valid credentials
-  function handleResetPassword() {
+  async function handleResetPassword() {
     if (!email) {
       setErrorMessage('Please enter your email.');
       return;
@@ -25,11 +26,18 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    // TODO: Integrate with backend reset-password endpoint
-    alert('Password reset instructions would be sent.');
-    setErrorMessage('If this email exists, a reset link has been sent.');
-    setIsSuccess(true);
-  }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/new-password`,
+    });
+
+    if (error) {
+      setErrorMessage(error.message);
+      setIsSuccess(false);
+    } else {
+      setErrorMessage('If this email exists, a reset link has been sent.');
+      setIsSuccess(true);
+    }
+  } 
 
   return (
     <div className={styles.container} style={{paddingTop: '11rem'}}>

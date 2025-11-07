@@ -46,15 +46,17 @@ export default function SignInPage() {
   }
 
   async function handleLogin() {
+    localStorage.removeItem("isPasswordRecovery");
     if (!email || !password) return setErrorMessage('Please fill out all fields.');
     if (!isValidEmail(email)) return setErrorMessage('Please enter a valid email address.');
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return setErrorMessage(error.message);
     navigate('/homeSignedIn');
-}
+  }
 
   async function handleSignUp() {
+    localStorage.removeItem("isPasswordRecovery");
     if (!firstName || !lastName || !email || !password) return setErrorMessage('Please fill out all fields.');
     if (!isValidEmail(email)) return setErrorMessage('Please enter a valid email address.');
 
@@ -63,9 +65,14 @@ export default function SignInPage() {
     navigate('/homeSignedIn');
     }
 
-  function handleSocial(provider) {
-    const mode = isSignUp ? 'Sign Up' : 'Log In';
-    alert(`${mode} with ${provider} — placeholder for Supabase`);
+  async function handleSocial(provider) {
+    localStorage.removeItem("isPasswordRecovery");
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: provider.toLowerCase(),
+      options: {
+        redirectTo: `${window.location.origin}/homeSignedIn`,
+      },
+    });
   }
 
   return (

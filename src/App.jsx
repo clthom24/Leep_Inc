@@ -20,6 +20,7 @@ import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
 import PricingPage from "./pages/Pricing";
 import SignedOut from "./pages/SignedOut";
+import NewPasswordPage from "./pages/Authentication/newPassword";
 
 // ---------- Private pages ----------
 import AppLayout from "./components/common/AppLayout/AppLayout";
@@ -41,15 +42,19 @@ function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
     });
 
-    // Listen for auth changes (sign in/out)
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
+
+      if (event === "PASSWORD_RECOVERY") {
+        localStorage.setItem("isPasswordRecovery", "true");
+      }
+
+      setLoading(false);
     });
 
     return () => listener.subscription.unsubscribe();
@@ -57,16 +62,21 @@ function useAuth() {
 
   return {
     isAuthenticated: !!session,
-    loading,
     session,
+    loading,
   };
 }
 
 function PrivateRoute() {
   const { isAuthenticated, loading } = useAuth();
-  
+  const isRecovery = localStorage.getItem("isPasswordRecovery") === "true";
+
   if (loading) {
     return <div style={{ textAlign: "center", padding: 40 }}>Checking login...</div>;
+  }
+  
+  if (isRecovery) {
+    return <Navigate to="/new-password" replace />;
   }
 
   if (!isAuthenticated) {
@@ -125,6 +135,7 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/SignedOut" element={<SignedOut />} />
+          <Route path="/new-password" element={<NewPasswordPage />} />
 
           {/* ---------- PRIVATE (with shared AppLayout) ---------- */}
           <Route element={<PrivateRoute />}>
