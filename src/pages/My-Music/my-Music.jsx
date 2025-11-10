@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import { supabase } from "../../supabaseClient";
 import { FaThumbsUp, FaRandom, FaPlus, FaPencilAlt, FaRegEnvelope  } from "react-icons/fa";
@@ -21,38 +21,156 @@ export default function MyMusicPage() {
 
   const tabs = ['Overview', 'Your Network', 'Manage Tracks', 'Albums', 'Remixes'];
   const networkTabs = ['Followers', 'Following', 'Collaborators'];
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [loadingNetwork, setLoadingNetwork] = useState(true);
 
-  // Keep accounts in state so we can update them
-  const [accounts, setAccounts] = useState([
-    { id: 1, name: 'Example Artist #1', follower: true, following: true, collaborator: false },
-    { id: 2, name: 'Example Artist #2', follower: true, following: false, collaborator: false },
-    { id: 3, name: 'Example Artist #3', follower: false, following: true, collaborator: false },
-    { id: 4, name: 'Example Artist #4', follower: true, following: true, collaborator: true },
-    { id: 5, name: 'Example Artist #5', follower: false, following: false, collaborator: true },
-    { id: 6, name: 'Example Artist #6', follower: false, following: true, collaborator: false },
-  ]);
+  useEffect(() => {
+    async function loadNetwork() {
+      setLoadingNetwork(true);
+      try {
+        const { data, error: userError } = await supabase.auth.getUser();
+        if (userError) throw userError;
 
-  // Filter accounts by active sub-tab
-  function getFilteredAccounts() {
-    switch (activeNetworkTab) {
-      case 'Followers':
-        return accounts.filter((acc) => acc.follower);
-      case 'Following':
-        return accounts.filter((acc) => acc.following);
-      case 'Collaborators':
-        return accounts.filter((acc) => acc.collaborator);
-      default:
-        return accounts;
+        const user = data?.user;
+        if (!user) {
+          console.warn("No authenticated user found — skipping network load.");
+          setLoadingNetwork(false);
+          return;
+        }
+
+        // Who follows ME
+        const { data: followersData, error: followersError } = await supabase
+          .from("follows")
+          .select("follower_id, profiles!follower_id(display_name, id)")
+          .eq("following_id", user.id);
+
+        if (followersError) throw followersError;
+
+        // Who I am following
+        const { data: followingData, error: followingError } = await supabase
+          .from("follows")
+          .select("following_id, profiles!following_id(display_name, id)")
+          .eq("follower_id", user.id);
+
+        if (followingError) throw followingError;
+
+        console.log("followersData", followersData);
+        console.log("followingData", followingData);
+
+        const followersList =
+          followersData?.map((f) => ({
+            id: f.profiles?.id ?? f.follower_id,
+            name: f.profiles?.display_name ?? "Unknown User",
+            follower: true,
+            following: false,
+          })) ?? [];
+
+        const followingList =
+          followingData?.map((f) => ({
+            id: f.profiles?.id ?? f.following_id,
+            name: f.profiles?.display_name ?? "Unknown User",
+            follower: false,
+            following: true,
+          })) ?? [];
+
+        const merged = [...followersList];
+        followingList.forEach((f) => {
+          const existing = merged.find((m) => m.id === f.id);
+          if (existing) existing.following = true;
+          else merged.push(f);
+        });
+
+        setFollowers(followersList);
+        setFollowing(followingList);
+        setAccounts(merged);
+      } catch (err) {
+        console.error("Error loading network:", err.message);
+      } finally {
+        setLoadingNetwork(false);
+      }
     }
+
+    loadNetwork();
+  }, []);
+
+  function getFilteredAccounts() {
+    if (activeNetworkTab === "Followers") return followers;
+    if (activeNetworkTab === "Following") return following;
+    return []; // Collaborators can be added later
   }
 
-  // Toggle follow/unfollow
-  function toggleFollow(id) {
-    setAccounts((prev) =>
-      prev.map((acc) =>
-        acc.id === id ? { ...acc, following: !acc.following } : acc
-      )
-    );
+  async function toggleFollow(targetId) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const isAlreadyFollowing = following.some((f) => f.id === targetId);
+
+    try {
+      if (isAlreadyFollowing) {
+        // ---- UNFOLLOW ----
+        const { error } = await supabase
+          .from("follows")
+          .delete()
+          .eq("follower_id", user.id)
+          .eq("following_id", targetId);
+        if (error) throw error;
+
+        // Remove from following list
+        setFollowing((prev) => prev.filter((f) => f.id !== targetId));
+
+        // Update both followers & accounts lists
+        setFollowers((prev) =>
+          prev.map((f) =>
+            f.id === targetId ? { ...f, following: false } : f
+          )
+        );
+        setAccounts((prev) =>
+          prev.map((a) =>
+            a.id === targetId ? { ...a, following: false } : a
+          )
+        );
+
+      } else {
+        // ---- FOLLOW ----
+        const { error } = await supabase
+          .from("follows")
+          .insert([{ follower_id: user.id, following_id: targetId }]);
+        if (error) throw error;
+
+        // Find that user's profile so we can store their name too
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .eq("id", targetId)
+          .single();
+
+        // Update both following and followers lists with complete info
+        const newFollowEntry = {
+          id: profileData?.id ?? targetId,
+          name: profileData?.display_name ?? "Unknown User",
+          follower: false,
+          following: true,
+        };
+
+        setFollowing((prev) => [...prev, newFollowEntry]);
+
+        setFollowers((prev) =>
+          prev.map((f) =>
+            f.id === targetId ? { ...f, following: true } : f
+          )
+        );
+
+        setAccounts((prev) =>
+          prev.map((a) =>
+            a.id === targetId ? { ...a, following: true } : a
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error toggling follow:", err.message);
+    }
   }
 
   async function handleUpload() {
@@ -289,37 +407,37 @@ export default function MyMusicPage() {
 
               {/* Accounts Grid */}
               <div className={styles.accountsGrid}>
-                {filteredAccounts.length > 0 ? (
-                  filteredAccounts.map((acc) => (
-                    <div className={styles.accountCard}>
-                      {/* Left side */}
-                      <div className={styles.leftGroup}>
-                        <div className={styles.avatar}></div>
-                        <div className={styles.artistName}>{acc.name}</div>
-                      </div>
-
-                      {/* Right side */}
-                      <div className={styles.rightGroup}>
-                        <button
-                          className={`${styles.followButton} ${acc.following ? styles.following : ''}`}
-                          onClick={() => toggleFollow(acc.id)}
-                        >
-                          {acc.following ? 'Following' : 'Follow'}
-                        </button>
-                        
-                        <button
-                          className={styles.messageButton}
-                          onClick={() => alert('Link to direct message with artist.')}
-                        >
-                          <FaRegEnvelope className={styles.messageIcon} />
-                        </button>
-                      </div>
+                {loadingNetwork ? (
+                <p>Loading your network...</p>
+              ) : filteredAccounts.length > 0 ? (
+                filteredAccounts.map((acc) => (
+                  <div key={acc.id} className={styles.accountCard}>
+                    <div className={styles.leftGroup}>
+                      <div className={styles.avatar}></div>
+                      <div className={styles.artistName}>{acc.name}</div>
                     </div>
 
-                  ))
-                ) : (
-                  <p>No accounts found.</p>
-                )}
+                    <div className={styles.rightGroup}>
+                      <button
+                        className={`${styles.followButton} ${acc.following ? styles.following : ''}`}
+                        onClick={() => toggleFollow(acc.id)}
+                      >
+                        {acc.following ? 'Following' : 'Follow'}
+                      </button>
+
+                      <button
+                        className={styles.messageButton}
+                        onClick={() => alert(`Link to message ${acc.name}`)}
+                      >
+                        <FaRegEnvelope className={styles.messageIcon} />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No accounts found.</p>
+              )}
+
               </div>
             </>
           )}
