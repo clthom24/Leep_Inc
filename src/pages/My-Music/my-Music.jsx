@@ -408,36 +408,35 @@ export default function MyMusicPage() {
               {/* Accounts Grid */}
               <div className={styles.accountsGrid}>
                 {loadingNetwork ? (
-                <p>Loading your network...</p>
-              ) : filteredAccounts.length > 0 ? (
-                filteredAccounts.map((acc) => (
-                  <div key={acc.id} className={styles.accountCard}>
-                    <div className={styles.leftGroup}>
-                      <div className={styles.avatar}></div>
-                      <div className={styles.artistName}>{acc.name}</div>
+                  <p>Loading your network...</p>
+                ) : filteredAccounts.length > 0 ? (
+                  filteredAccounts.map((acc) => (
+                    <div key={acc.id} className={styles.accountCard}>
+                      <div className={styles.leftGroup}>
+                        <div className={styles.avatar}></div>
+                        <div className={styles.artistName}>{acc.name}</div>
+                      </div>
+
+                      <div className={styles.rightGroup}>
+                        <button
+                          className={`${styles.followButton} ${acc.following ? styles.following : ''}`}
+                          onClick={() => toggleFollow(acc.id)}
+                        >
+                          {acc.following ? 'Following' : 'Follow'}
+                        </button>
+
+                        <button
+                          className={styles.messageButton}
+                          onClick={() => alert(`Link to message ${acc.name}`)}
+                        >
+                          <FaRegEnvelope className={styles.messageIcon} />
+                        </button>
+                      </div>
                     </div>
-
-                    <div className={styles.rightGroup}>
-                      <button
-                        className={`${styles.followButton} ${acc.following ? styles.following : ''}`}
-                        onClick={() => toggleFollow(acc.id)}
-                      >
-                        {acc.following ? 'Following' : 'Follow'}
-                      </button>
-
-                      <button
-                        className={styles.messageButton}
-                        onClick={() => alert(`Link to message ${acc.name}`)}
-                      >
-                        <FaRegEnvelope className={styles.messageIcon} />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No accounts found.</p>
-              )}
-
+                  ))
+                ) : (
+                  <p>No accounts found.</p>
+                )}
               </div>
             </>
           )}
