@@ -21,6 +21,7 @@ import ContactPage from "./pages/Contact";
 import PricingPage from "./pages/Pricing";
 import SignedOut from "./pages/SignedOut";
 import NewPasswordPage from "./pages/Authentication/newPassword";
+import EmailConfirmationPage from "./pages/Authentication/emailConfirmation";
 
 // ---------- Private pages ----------
 import AppLayout from "./components/common/AppLayout/AppLayout";
@@ -30,6 +31,7 @@ import PlaylistsPage from "./pages/Playlists";
 import MyMusicPage from "./pages/My-Music/my-Music";
 import EventsPage from "./pages/Events/events";
 import HomeSignedIn from "./pages/HomeSignedIn";
+import AccountStartupPage from "./pages/Authentication/accountStartup";
 
 // ---------- Messages (nested) ----------
 import MessageDashboardPage from "./pages/Messages/MessageDashboard";
@@ -68,21 +70,62 @@ function useAuth() {
 }
 
 function PrivateRoute() {
-  const { isAuthenticated, loading } = useAuth();
+  const { session, loading } = useAuth();
+  const [role, setRole] = useState(null);
+  const [checkingRole, setCheckingRole] = useState(true);
+  const [delayDone, setDelayDone] = useState(false);
+
   const isRecovery = localStorage.getItem("isPasswordRecovery") === "true";
 
-  if (loading) {
-    return <div style={{ textAlign: "center", padding: 40 }}>Checking login...</div>;
+  useEffect(() => {
+    const timer = setTimeout(() => setDelayDone(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    async function fetchRole() {
+      if (!session) {
+        setCheckingRole(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+
+      if (!error) {
+        setRole(data?.role ?? null);
+      }
+
+      setCheckingRole(false);
+    }
+
+    fetchRole();
+  }, [session]);
+
+  // Still checking session or role
+  if (loading || checkingRole || !delayDone) {
+    return <div style={{ textAlign: "center", padding: 40 }}>Checking account...</div>;
   }
-  
+
+  // Not signed in at all
+  if (!session) {
+    return <Navigate to="/sign-in" replace />;
+  }
+
+  // Reset password flow
   if (isRecovery) {
     return <Navigate to="/new-password" replace />;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/sign-in" replace />;
+  // User signed in but no role → force onboarding
+  if (role === null) {
+    return <Navigate to="/account-startup" replace />;
   }
 
+  // Allow access
   return <Outlet />;
 }
 
@@ -136,6 +179,8 @@ export default function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/SignedOut" element={<SignedOut />} />
           <Route path="/new-password" element={<NewPasswordPage />} />
+          <Route path="/account-startup" element={<AccountStartupPage />} />
+          <Route path="/email-confirmation" element={<EmailConfirmationPage />} />
 
           {/* ---------- PRIVATE (with shared AppLayout) ---------- */}
           <Route element={<PrivateRoute />}>

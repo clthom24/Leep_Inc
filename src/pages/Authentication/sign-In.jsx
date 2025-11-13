@@ -60,19 +60,38 @@ export default function SignInPage() {
     if (!firstName || !lastName || !email || !password) return setErrorMessage('Please fill out all fields.');
     if (!isValidEmail(email)) return setErrorMessage('Please enter a valid email address.');
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const displayName = `${firstName} ${lastName}`.trim();
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { display_name: displayName },
+        emailRedirectTo: `${window.location.origin}/account-startup`,
+      },
+    });
+
     if (error) return setErrorMessage(error.message);
-    navigate('/homeSignedIn');
-    }
+
+    // Save email in localStorage (backup for page refresh)
+    localStorage.setItem("pendingSignUpEmail", email);
+
+    // Redirect to confirmation screen
+    navigate("/email-confirmation", { state: { email } });
+  }
 
   async function handleSocial(provider) {
     localStorage.removeItem("isPasswordRecovery");
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: provider.toLowerCase(),
       options: {
-        redirectTo: `${window.location.origin}/homeSignedIn`,
+        redirectTo: `${window.location.origin}/account-startup`,
       },
     });
+
+    if (error) {
+      setErrorMessage(error.message);
+    }
   }
 
   return (
