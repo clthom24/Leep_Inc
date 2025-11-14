@@ -274,10 +274,16 @@
 }
 
 .playButton {
+  width: 32px;          /* fixed */
+  height: 32px;         /* fixed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  color: #fff;
+  color: white;
   cursor: pointer;
+  font-size: 1rem;    /* affects icon size */
 }
 
 .progressBar {
@@ -285,15 +291,14 @@
   height: 0.4375rem;
   background-color: #2a2f3a;
   border-radius: 1rem;
-  overflow: hidden;
   position: relative;
   cursor: pointer;
 }
 
 .progress {
-  width: 25%; /* placeholder */
   height: 100%;
   background-color: #4fc3f7;
+  transition: width 0.1s linear;
 }
 
 .trackStats {
@@ -675,4 +680,16 @@ textarea {
 .messageIcon {
   font-size: 2rem;
   color: #4fc3f7;
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
 }

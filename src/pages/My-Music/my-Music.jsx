@@ -1,17 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './styles.module.css';
 import { supabase } from "../../supabaseClient";
-import { FaThumbsUp, FaRandom, FaPlus, FaPencilAlt, FaRegEnvelope  } from "react-icons/fa";
+import { FaThumbsUp, FaRandom, FaPlus, FaPencilAlt, FaRegEnvelope, FaPlay, FaPause } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 export default function MyMusicPage() {
-  const [activeTab, setActiveTab] = useState('Overview');
-  const [activeNetworkTab, setActiveNetworkTab] = useState('Followers');
+  const location = useLocation();
+
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "Overview"
+  );
+
+  const [activeNetworkTab, setActiveNetworkTab] = useState(
+    location.state?.activeNetworkTab || "Followers"
+  );
 
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadStep, setUploadStep] = useState(1);
 
   const [uploadData, setUploadData] = useState({
     audioFiles: [],
+    stemFiles: [],
     coverArt: null,
     title: '',
     description: '',
@@ -56,9 +65,6 @@ export default function MyMusicPage() {
 
         if (followingError) throw followingError;
 
-        console.log("followersData", followersData);
-        console.log("followingData", followingData);
-
         const followersList =
           followersData?.map((f) => ({
             id: f.profiles?.id ?? f.follower_id,
@@ -100,6 +106,8 @@ export default function MyMusicPage() {
     if (activeNetworkTab === "Following") return following;
     return []; // Collaborators can be added later
   }
+
+  const filteredAccounts = getFilteredAccounts();
 
   async function toggleFollow(targetId) {
     const { data: { user } } = await supabase.auth.getUser();
@@ -173,86 +181,303 @@ export default function MyMusicPage() {
     }
   }
 
-  async function handleUpload() {
-      if (uploadData.audioFiles.length === 0) {
-        alert("Please select at least one song file.");
+  const [tracks, setTracks] = useState([]);
+  const [loadingTracks, setLoadingTracks] = useState(true);
+
+  useEffect(() => {
+    async function loadTracks() {
+      setLoadingTracks(true);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setTracks([]);
+        setLoadingTracks(false);
         return;
       }
-  
-      try {
-        // 🔑 Get logged-in user (for artist_id)
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (!user) throw new Error("You must be logged in to upload songs.");
-        
-        let artworkUrl = null;
-  
-        // 1️⃣ Upload artwork (if any)
-        if (uploadData.coverArt) {
-          const safeFileName = uploadData.coverArt.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-          const artworkPath = `${user.id}/${Date.now()}_${safeFileName}`;
-          const { error: artworkError } = await supabase.storage
-            .from("artwork") // your Supabase bucket name for cover art
-            .upload(artworkPath, uploadData.coverArt);
-  
-          if (artworkError) throw artworkError;
-  
-          const { data: publicArtwork } = supabase.storage
-            .from("artwork")
-            .getPublicUrl(artworkPath);
-  
-          artworkUrl = publicArtwork.publicUrl;
-        }
-        
-        // 2️⃣ Upload each audio file
-        for (const file of uploadData.audioFiles) {
-          const audioPath = `${user.id}/${Date.now()}_${file.name}`;
-          const { error: audioError } = await supabase.storage
-            .from("audio") // your Supabase bucket for audio files
-            .upload(audioPath, file);
-          if (audioError) throw audioError;
-          
-          
-          const { data: publicAudio } = supabase.storage
-            .from("audio")
-            .getPublicUrl(audioPath);
-  
-          const audioUrl = publicAudio.publicUrl;
-  
-          // 3️⃣ Insert row into `songs` table
-          const { error: dbError } = await supabase.from("songs").insert([
-            {
-              artist_id: user.id,          // must equal auth.uid()
-              title: uploadData.title || file.name,
-              audio_url: audioUrl,
-              artwork_url: artworkUrl,
-              is_published: true,
-            },
-          ]);
-  
-          if (dbError) throw dbError;
-        }
-        
-        alert("Upload successful!");
-      } catch (err) {
-        console.error("Upload error:", err.message);
-        alert(`Upload failed: ${err.message}`);
-      } finally {
-        // Reset modal
-        setShowUploadModal(false);
-        setUploadStep(1);
-        setUploadData({
-          audioFiles: [],
-          coverArt: null,
-          title: "",
-          description: "",
-          tags: "",
-          privacy: "Public",
-        });
+
+      const userId = session.user.id;
+
+      const { data, error } = await supabase
+        .from("songs")
+        .select("id, title, audio_url, artwork_url, is_published")
+        .eq("artist_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching songs:", error);
+        setTracks([]);
+        setLoadingTracks(false);
+        return;
       }
+
+      const rawTracks = data || [];
+
+      // 🔹 Compute durations right here
+      const tracksWithDurations = await Promise.all(
+        rawTracks.map(async (track) => {
+          const duration = await getAudioDuration(track.audio_url);
+          return { ...track, duration };
+        })
+      );
+
+      setTracks(tracksWithDurations);
+      setLoadingTracks(false);
     }
 
-  const filteredAccounts = getFilteredAccounts();
+    loadTracks();
+  }, []);
+
+
+  async function getAudioDuration(url) {
+    return new Promise((resolve) => {
+      const audio = new Audio();
+      audio.preload = "metadata";
+      audio.src = url + `?t=${Date.now()}`; // cache-buster so stale 404s don't stick
+
+      audio.addEventListener("loadedmetadata", () => {
+        // Some browsers can give NaN briefly
+        if (isNaN(audio.duration)) {
+          resolve(0);
+        } else {
+          resolve(audio.duration || 0);
+        }
+        audio.remove(); // cleanup
+      });
+
+      audio.addEventListener("error", () => {
+        console.warn("Error loading audio metadata for:", url);
+        resolve(0);
+        audio.remove();
+      });
+    });
+  }
+
+  function formatTime(seconds) {
+    if (!seconds) return "0:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  const [currentTrackId, setCurrentTrackId] = useState(null);
+  const [audio, setAudio] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [wasPlayingBeforeDrag, setWasPlayingBeforeDrag] = useState(false);
+
+  function handlePlayPause(track) {
+    if (currentTrackId === track.id && audio) {
+      if (audio.paused) audio.play();
+      else audio.pause();
+      return;
+    }
+
+    if (audio) audio.pause();
+
+    const newAudio = new Audio(track.audio_url);
+    setAudio(newAudio);
+    setCurrentTrackId(track.id);
+
+    newAudio.addEventListener("loadedmetadata", () => {
+      setDuration(newAudio.duration);
+    });
+
+    newAudio.addEventListener("timeupdate", () => {
+      if (!isDragging) {
+        setCurrentTime(newAudio.currentTime);
+        setProgress(newAudio.currentTime / newAudio.duration);
+      }
+    });
+
+    newAudio.addEventListener("ended", () => {
+      setCurrentTrackId(null);
+      setProgress(0);
+      setCurrentTime(0);
+    });
+
+    newAudio.play();
+  }
+
+  function handleBarClick(e, track) {
+    if (!audio || currentTrackId !== track.id) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const newProgress = clickX / rect.width;
+
+    audio.currentTime = newProgress * duration;
+    setCurrentTime(audio.currentTime);
+    setProgress(newProgress);
+  }
+
+  function handleDragStart() {
+    if (audio) {
+      setWasPlayingBeforeDrag(!audio.paused); // true if it was playing
+      audio.pause();
+    }
+    setIsDragging(true);
+  }
+
+  function handleDragMove(e, barRef) {
+    if (!isDragging || !audio) return;
+
+    const rect = barRef.current.getBoundingClientRect();
+    let pos = e.clientX - rect.left;
+    pos = Math.max(0, Math.min(pos, rect.width)); // clamp
+    const newProgress = pos / rect.width;
+
+    setProgress(newProgress);
+    setCurrentTime(newProgress * duration);
+  }
+
+  function handleDragEnd() {
+    if (!audio) {
+      setIsDragging(false);
+      return;
+    }
+
+    // Seek to new position
+    audio.currentTime = progress * duration;
+
+    // Resume playback ONLY if it was playing before drag
+    if (wasPlayingBeforeDrag) {
+      audio.play();
+    }
+
+    setIsDragging(false);
+  }
+
+  const barRef = useRef(null);
+  
+  async function handleUpload() {
+    if (uploadData.audioFiles.length === 0) {
+      alert("Please select at least one song file.");
+      return;
+    }
+
+    try {
+      // 🔑 Get logged-in user (artist_id)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("You must be logged in to upload songs.");
+
+      let artworkUrl = null;
+
+      // ================================
+      // 1️⃣ Upload Artwork (if provided)
+      // ================================
+      if (uploadData.coverArt) {
+        const safeFileName = uploadData.coverArt.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+        const artworkPath = `${user.id}/${Date.now()}_${safeFileName}`;
+
+        const { error: artworkError } = await supabase.storage
+          .from("artwork")
+          .upload(artworkPath, uploadData.coverArt);
+
+        if (artworkError) throw artworkError;
+
+        const { data: publicArtwork } = supabase.storage
+          .from("artwork")
+          .getPublicUrl(artworkPath);
+
+        artworkUrl = publicArtwork.publicUrl;
+      }
+
+      // 2️⃣ Upload Main Audio + Insert Single Song
+      const file = uploadData.audioFiles[0]; // we already know length > 0 from earlier check
+      const audioPath = `${user.id}/${Date.now()}_${file.name}`;
+
+      const { error: audioError } = await supabase.storage
+        .from("audio")
+        .upload(audioPath, file);
+
+      if (audioError) throw audioError;
+
+      const { data: publicAudio } = supabase.storage
+        .from("audio")
+        .getPublicUrl(audioPath);
+
+      const audioUrl = publicAudio.publicUrl;
+
+      // Insert into songs table and get song_id
+      const { data: insertedSong, error: dbError } = await supabase
+        .from("songs")
+        .insert([
+          {
+            artist_id: user.id,
+            title: uploadData.title || file.name,
+            audio_url: audioUrl,
+            artwork_url: artworkUrl,
+            is_published: true,
+          },
+        ])
+        .select("id")
+        .single();
+
+      if (dbError) throw dbError;
+
+      const songId = insertedSong.id;
+
+      // ======================================
+      // 3️⃣ Upload Optional Stems (NEW STEP 2)
+      // ======================================
+      if (uploadData.stemFiles && uploadData.stemFiles.length > 0) {
+        for (const stem of uploadData.stemFiles) {
+          const safeName = stem.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+          const stemPath = `${user.id}/${Date.now()}_${safeName}`;
+
+          // Upload stem file to storage
+          const { error: storageError } = await supabase.storage
+            .from("audio_stems") // your stems bucket
+            .upload(stemPath, stem);
+
+          if (storageError) {
+            console.error("Stem upload error:", storageError);
+            continue;
+          }
+
+          const { data: publicStem } = supabase.storage
+            .from("audio_stems")
+            .getPublicUrl(stemPath);
+
+          // Insert metadata into song_stems table, linked to this one songId
+          const { error: stemDbError } = await supabase
+            .from("song_stems")
+            .insert({
+              song_id: songId,      // 👈 single song
+              uploader_id: user.id,
+              name: stem.name,
+              file_url: publicStem.publicUrl,
+            });
+
+          if (stemDbError) {
+            console.error("Stem DB insert error:", stemDbError);
+          }
+        }
+      }
+
+      // Success!
+      alert("Upload successful!");
+
+    } catch (err) {
+      console.error("Upload error:", err.message);
+      alert(`Upload failed: ${err.message}`);
+    } finally {
+      // Modal reset
+      setShowUploadModal(false);
+      setUploadStep(1);
+      setUploadData({
+        audioFiles: [],
+        stemFiles: [],
+        coverArt: null,
+        title: "",
+        description: "",
+        tags: "",
+        privacy: "Public",
+      });
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -446,57 +671,112 @@ export default function MyMusicPage() {
               <div className={styles.overviewStats}>
                 Your Uploaded Tracks
               </div>
-              {[
-                { id: 1, title: 'Song Title 1', duration: '03:45' },
-                { id: 2, title: 'Song Title 2', duration: '04:12' },
-                { id: 3, title: 'Song Title 3', duration: '02:58' },
-                { id: 4, title: 'Song Title 4', duration: '03:49' },
-                { id: 5, title: 'Song Title 5', duration: '01:54' },
-                { id: 6, title: 'Song Title 6', duration: '03:04' },
-              ].map((song) => (
-                <div key={song.id} className={styles.trackCard}>
-                  {/* Cover on the left */}
-                  <div className={styles.trackCover}>Cover</div>
+              {loadingTracks && <p>Loading songs...</p>}
 
-                  {/* Details area */}
-                  <div className={styles.trackDetails}>
-                    {/* Row: Title + Actions */}
-                    <div className={styles.trackHeader}>
-                      <div className={styles.trackTitle}>
-                        {song.title} <FaPencilAlt className={styles.Icon} style={{marginLeft: '0.25rem'}}/>
+              {!loadingTracks && tracks.length === 0 && (
+                <p>No songs uploaded yet.</p>
+              )}
+
+              {tracks.map((track) => {
+                const isActive = currentTrackId === track.id;
+
+                return (
+                  <div key={track.id} className={styles.trackCard}>
+                    {/* Cover art on the left */}
+                    <div className={styles.trackCover}>
+                      {track.artwork_url ? (
+                        <img
+                          src={track.artwork_url}
+                          alt={track.title}
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        />
+                      ) : (
+                        "Cover"
+                      )}
+                    </div>
+
+                    {/* Details area */}
+                    <div className={styles.trackDetails}>
+                      {/* Row: Title + Actions */}
+                      <div className={styles.trackHeader}>
+                        <div className={styles.trackTitle}>
+                          {track.title}
+                          <FaPencilAlt
+                            className={styles.Icon}
+                            style={{ marginLeft: "0.25rem" }}
+                          />
+                        </div>
+
+                        <div className={styles.trackActions}>
+                          <button className={styles.linkButton}>Share</button>
+                          <button className={styles.linkButton}>Change Privacy</button>
+                          <button className={styles.linkButton}>Remix</button>
+                          <button className={styles.linkButton}>Delete</button>
+                        </div>
                       </div>
-                      <div className={styles.trackActions}>
-                        <button className={styles.linkButton}>Share</button>
-                        <button className={styles.linkButton}>Change Privacy</button>
-                        <button className={styles.linkButton}>Remix</button>
-                        <button className={styles.linkButton}>Delete</button>
+
+                      {/* Play bar row */}
+                      <div className={styles.trackTime}>
+                        {/* CURRENT TIME – only active track shows live time */}
+                        <span>{formatTime(isActive ? currentTime : 0)}</span>
+
+                        {/* PLAY/PAUSE BUTTON */}
+                        <button
+                          className={styles.playButton}
+                          onClick={() => handlePlayPause(track)}
+                        >
+                          {isActive && audio && !audio.paused ? <FaPause /> : <FaPlay />}
+                        </button>
+
+                        {/* PROGRESS BAR (Clickable + Draggable) */}
+                        <div
+                          className={styles.progressBar}
+                          ref={barRef}
+                          onClick={(e) => handleBarClick(e, track)}
+                          onMouseMove={(e) => handleDragMove(e, barRef)}
+                          onMouseUp={handleDragEnd}
+                          onMouseLeave={handleDragEnd}
+                        >
+                          <div
+                            className={styles.progress}
+                            style={{
+                              width: isActive ? `${Math.min(progress * 100, 100)}%` : "0%",
+                            }}
+                          />
+
+                          {/* DRAGGABLE WHITE CIRCLE */}
+                          <div
+                            className={styles.thumb}
+                            style={{
+                              left: isActive ? `${Math.min(progress * 100, 100)}%` : "0%",
+                            }}
+                            onMouseDown={handleDragStart}
+                          ></div>
+                        </div>
+
+                        {/* TOTAL DURATION */}
+                        <span>{formatTime(track.duration)}</span>
                       </div>
                     </div>
 
-                    {/* Play bar row */}
-                    <div className={styles.trackTime}>
-                      <span>00:00</span>
-                      <button className={styles.playButton}>▶</button>
-                      <div className={styles.progressBar}>
-                        <div className={styles.progress}></div>
-                      </div>
-                      <span>{song.duration}</span>
+                    {/* Stats on the far right */}
+                    <div className={styles.trackStats}>
+                      <FaThumbsUp className={styles.icon} />
+                      000
+
+                      <FaRandom className={styles.icon} style={{ fontSize: "1.375rem" }} />
+                      000
+
+                      <FaPlus
+                        className={styles.icon}
+                        style={{ fontSize: "1.5rem", marginLeft: "-0.25rem" }}
+                      />
+                      000
                     </div>
                   </div>
+                );
+              })}
 
-                  {/* Stats on the far right */}
-                  <div className={styles.trackStats}>
-                      <FaThumbsUp className={styles.icon} style={{marginTop: 'none'}}/>
-                      000
-
-                      <FaRandom className={styles.icon} style={{fontSize: '1.375rem'}}/>
-                      000
-                      
-                      <FaPlus className={styles.icon} style={{fontSize: '1.5rem', marginLeft: '-0.25rem'}}/>
-                      000
-                    </div>
-                </div>
-              ))}
             </div>
           )}
 
@@ -527,7 +807,6 @@ export default function MyMusicPage() {
               </div>
             </div>
           )}
-
 
           {activeTab === 'Remixes' && (
             <div className={styles.tracksList}>
@@ -600,7 +879,7 @@ export default function MyMusicPage() {
 
               {/* Step Progress Indicator */}
               <div className={styles.progressContainer}>
-                {[1, 2, 3, 4].map((num) => (
+                {[1, 2, 3, 4, 5].map((num) => (
                   <div key={num} className={styles.progressStep}>
                     <div
                       className={`${styles.circle} ${
@@ -615,7 +894,7 @@ export default function MyMusicPage() {
                     >
                       {uploadStep > num ? '✓' : num}
                     </div>
-                    {num < 4 && (
+                    {num < 5 && (
                       <div
                         className={`${styles.line} ${
                           uploadStep > num ? styles.completedLine : ''
@@ -630,7 +909,7 @@ export default function MyMusicPage() {
               {uploadStep === 1 && (
                 <div className={styles.stepContent}>
                   <h2 className={styles.stepHeader}>
-                    Choose Audio File(s)
+                    Choose Main Audio Track
                     <label htmlFor="audioUpload" className={styles.fileUploadButton}>
                       <FaPlus className={styles.plusIcon} />
                     </label>
@@ -638,7 +917,6 @@ export default function MyMusicPage() {
                     <input
                       id="audioUpload"
                       type="file"
-                      multiple
                       accept="audio/*"
                       onChange={(e) =>
                         setUploadData({
@@ -673,8 +951,56 @@ export default function MyMusicPage() {
                 </div>
               )}
 
-
               {uploadStep === 2 && (
+                <div className={styles.stepContent}>
+                  <h2 className={styles.stepHeader}>
+                    Upload Stems (Optional)
+                    <label htmlFor="stemUpload" className={styles.fileUploadButton}>
+                      <FaPlus className={styles.plusIcon} />
+                    </label>
+
+                    <input
+                      id="stemUpload"
+                      type="file"
+                      multiple
+                      accept="audio/*"
+                      onChange={(e) =>
+                        setUploadData({
+                          ...uploadData,
+                          stemFiles: [
+                            ...(uploadData.stemFiles || []),
+                            ...Array.from(e.target.files),
+                          ],
+                        })
+                      }
+                      className={styles.hiddenInput}
+                    />
+                  </h2>
+
+                  {/* Uploaded stems list */}
+                  {uploadData.stemFiles && uploadData.stemFiles.length > 0 && (
+                    <div className={styles.uploadedFilesList}>
+                      {uploadData.stemFiles.map((file, index) => (
+                        <div key={index} className={styles.uploadedFileItem}>
+                          <span className={styles.fileName}>{file.name}</span>
+
+                          <button
+                            className={styles.removeFileButton}
+                            onClick={() => {
+                              const updated = uploadData.stemFiles.filter((_, i) => i !== index);
+                              setUploadData({ ...uploadData, stemFiles: updated });
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {uploadStep === 3 && (
                 <div className={styles.stepContent}>
                   <h2 className={styles.stepHeader}>
                     Choose Track Cover Art
@@ -716,8 +1042,7 @@ export default function MyMusicPage() {
                 </div>
               )}
 
-
-              {uploadStep === 3 && (
+              {uploadStep === 4 && (
                 <div className={styles.stepContent}>
                   <h2 className={styles.stepHeader}>Track Details</h2>
                   <input
@@ -740,7 +1065,7 @@ export default function MyMusicPage() {
                 </div>
               )}
 
-              {uploadStep === 4 && (
+              {uploadStep === 5 && (
                 <div className={styles.stepContent}>
                   <h2 className={styles.stepHeader}>Discoverability & Privacy</h2>
 
@@ -777,7 +1102,7 @@ export default function MyMusicPage() {
                 )}
 
                 {/* Next or Finish */}
-                {uploadStep < 4 ? (
+                {uploadStep < 5 ? (
                   <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => {setUploadStep(uploadStep + 1);}}>
                     Next
                   </button>
@@ -788,7 +1113,6 @@ export default function MyMusicPage() {
                   </button>
                 )}
               </div>
-
 
               {/* Close button */}
               <button

@@ -1,5 +1,8 @@
 // src/pages/Profile/index.jsx
 import styles from "./profile.module.css";
+import { useEffect, useState } from "react";
+import { supabase } from "../../supabaseClient"; 
+import { useNavigate } from "react-router-dom";
 
 // mock data – swap with real props/api later
 const highlights = [
@@ -11,6 +14,60 @@ const highlights = [
 ];
 
 export default function Profile() {
+  const [profile, setProfile] = useState(null);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  // ===========================
+  // Load profile + followers
+  // ===========================
+  useEffect(() => {
+    async function loadData() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        setLoading(false);
+        return;
+      }
+
+      const userId = session.user.id;
+
+      // Save email from auth
+      setEmail(session.user.email || "");
+
+      // Get profile info
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("display_name, role, created_at")
+        .eq("id", userId)
+        .single();
+
+      setProfile(profileRow);
+
+      // Get follower count
+      const { count, error } = await supabase
+        .from("follows")
+        .select("*", { count: "exact", head: true })
+        .eq("following_id", userId);
+
+      if (error) console.error("Follower count error:", error);
+      console.log("Follower count:", count);
+
+      setFollowerCount(count || 0);
+
+      setLoading(false);
+    }
+
+    loadData();
+  }, []);
+
+  if (loading) return <div style={{ padding: 40 }}>Loading profile…</div>;
+  if (!profile) return <div style={{ padding: 40 }}>Profile not found.</div>;
+
   return (
     <div className={styles["profile-page"]}>
       {/* ===== Banner ===== */}
@@ -19,30 +76,48 @@ export default function Profile() {
         <div className={styles["banner-overlay"]} />
         <div className={styles["banner-content"]}>
           <div className={styles.avatar} aria-hidden="true" />
+
+          {/* Name + Stats */}
           <div className={styles.who}>
-            <h1 className={styles.name}>Artist Name</h1>
+            <h1 className={styles.name}>
+              {profile.display_name || "Unnamed Artist"}
+            </h1>
+
             <div className={styles.stats}>
-              <span>Follower Count</span>
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  navigate("/my-music", {
+                    state: { activeTab: "Your Network", activeNetworkTab: "Followers" }
+                  })
+                }
+                onMouseEnter={(e) => (e.target.style.textDecoration = "underline")}
+                onMouseLeave={(e) => (e.target.style.textDecoration = "none")}
+              >
+                {followerCount} {followerCount === 1 ? "Follower" : "Followers"}
+              </span>
               <span>•</span>
-              <span>Plays</span>
+              <span>0 Plays</span>
               <span>•</span>
-              <span>Likes</span>
+              <span>0 Likes</span>
             </div>
           </div>
+
           <button className={styles["btn-epk"]} type="button">
             Export EPK
           </button>
         </div>
       </section>
 
-      {/* ===== Unified panel under the banner ===== */}
+      {/* ===== Info Section ===== */}
       <section className={styles["profile-panel"]}>
-        {/* About */}
+
+        {/* About Section */}
         <div className={styles.section}>
           <h2 className={styles["section-title"]}>About</h2>
           <p className={`${styles.muted} ${styles.small}`}>
-            Artist bio or description goes here… Write a short intro that tells
-            listeners who you are and what you make.
+            Artist bio or description goes here…  
+            (Later you can store this in Supabase too.)
           </p>
         </div>
 
@@ -74,7 +149,7 @@ export default function Profile() {
                   <div className={styles.artwork} aria-hidden="true" />
                   <div className={styles.meta}>
                     <div className={styles.title}>{it.title}</div>
-                    <div className={styles.artist}>{it.artist}</div>
+                    <div className={styles.artist}>{profile.display_name}</div>
                   </div>
                 </div>
               ))}
@@ -94,16 +169,19 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Account info / privacy / accessibility */}
+        {/* Account Information */}
         <div className={styles.section}>
           <h2 className={styles["section-title"]}>Account Information</h2>
 
           <div className={styles["account-grid"]}>
             <div className={styles.kv}>
               <div className={styles.key}>Registered Name</div>
-              <div className={styles.val}>John / Jane Doe</div>
-              <div className={styles.key}>Account e-mail</div>
-              <div className={styles.val}>artist@example.com</div>
+              <div className={styles.val}>
+                {profile.display_name || "—"}
+              </div>
+
+              <div className={styles.key}>Account Email</div>
+              <div className={styles.val}>{email}</div>
             </div>
 
             <div className={styles["sub-card"]}>
@@ -121,6 +199,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
+
       </section>
     </div>
   );
