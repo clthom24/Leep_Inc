@@ -34,6 +34,10 @@ export default function Sidebar({ collapsed, onToggle }) {
         <span className={styles.label}>My Music</span>
       </NavLink>
 
+      <NavLink to="/collaborationdashboard" className={styles.link} title="Collaboration">
+        <span className={styles.label}>Collaboration</span>
+      </NavLink>
+
       <NavLink to="/messagedashboard" className={styles.link} title="Messages | Remix Requests">
         <span className={styles.label}>Messages</span>
       </NavLink>
@@ -52,7 +56,11 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Logout button */}
       <button
-        type="button" className={styles.link} title="Logout" onClick={handleLogout}>
+        type="button" 
+        className={styles.link} 
+        title="Logout" 
+        onClick={handleLogout}
+      >
         <span className={styles.label}>Logout</span>
       </button>
     </aside>

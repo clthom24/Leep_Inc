@@ -1,0 +1,72 @@
+.collabContainer {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  height: 80vh;
+}
+
+/* Editor on the left */
+.editorWindow {
+  flex: 2;
+  background-color: #1b1f29;
+  border: 0.125rem solid #2a2f3a;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* Right-side stems window */
+.stemsWindow {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* allow children to shrink */
+}
+
+/* Tabs like MessageDashboard */
+.tabsContainer {
+  display: flex;
+  border-bottom: 2px solid #2a2f3a;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 0;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  background: #0f1115;   /* inactive tab is darker */
+  color: #e8ebf0;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.tab:not(:last-child) {
+  margin-right: 2px;
+}
+
+.tab:hover {
+  background-color: #1b1f29;
+}
+
+.tabActive {
+  background: #141821;   /* active tab is lighter */
+  color: #4fc3f7;        /* brand accent for active */
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.25);
+}
+
+.tabContent {
+  flex: 1 1 0;                  /* fill stemsWindow */
+  display: flex;
+  flex-direction: column;    /* children stack vertically */
+  padding: 0;
+  margin-top: -2px;
+
+  /* constrain children so they don't push height */
+  min-height: 0; 
+  overflow: hidden;         /* prevents children from pushing page down */
+}

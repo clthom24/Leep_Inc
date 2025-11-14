@@ -13,7 +13,6 @@ import { supabase } from "./supabaseClient";
 
 // ---------- Public pages ----------
 import LandingPage from "./pages/Landing";
-import CollaborationPage from "./pages/Collaboration";
 import SignInPage from "./pages/Authentication/sign-In";
 import ForgotPasswordPage from "./pages/Authentication/passwordReset";
 import AboutPage from "./pages/About";
@@ -25,6 +24,10 @@ import EmailConfirmationPage from "./pages/Authentication/emailConfirmation";
 
 // ---------- Private pages ----------
 import AppLayout from "./components/common/AppLayout/AppLayout";
+import CollaborationDashboardPage from "./pages/Collaboration/CollaborationDashboard";
+import MyStems from "./pages/Collaboration/MyStems";
+import Editor from "./pages/Collaboration/Editor";
+import SharedStems from "./pages/Collaboration/SharedStems";
 import ProfilePage from "./pages/Profile";
 import LikedPage from "./pages/Liked";
 import PlaylistsPage from "./pages/Playlists";
@@ -170,14 +173,15 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
         <Route element={<RootLayout />}>
           {/* ---------- PUBLIC ---------- */}
-          <Route path="/collab" element={<CollaborationPage />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignInPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/SignedOut" element={<SignedOut />} />
+          <Route path="/SignedOut" element={<SignedOut />} /> 0
+           
+           0
           <Route path="/new-password" element={<NewPasswordPage />} />
           <Route path="/account-startup" element={<AccountStartupPage />} />
           <Route path="/email-confirmation" element={<EmailConfirmationPage />} />
@@ -192,14 +196,22 @@ export default function App() {
               <Route path="/events" element={<EventsPage />} />
               <Route path="/HomeSignedIn" element={<HomeSignedIn />} />
 
-              {/* Nested messages section */}
+              {/* Messages */}
               <Route path="/messagedashboard" element={<MessageDashboardPage />}>
                 <Route index element={<Messages />} />
                 <Route path="messages" element={<Messages />} />
                 <Route path="requests" element={<Requests />} />
               </Route>
+
+              {/* Collaboration */}
+              <Route path="/collaborationdashboard" element={<CollaborationDashboardPage />}>
+                <Route index element={<Editor />} />         
+                <Route path="mystems" element={<MyStems />} />
+                <Route path="sharedstems" element={<SharedStems />} />
+              </Route>
             </Route>
           </Route>
+
 
           {/* ---------- FALLBACK ---------- */}
           <Route path="*" element={<NotFound />} />
