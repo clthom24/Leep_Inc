@@ -42,23 +42,7 @@ export default function Header() {
     navigate("/sign-in");
   };
 
-  // --- Search handler ---
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const q = new FormData(e.currentTarget).get("q")?.toString().trim() ?? "";
-    if (q) navigate(`/collab?q=${encodeURIComponent(q)}`);
-  };
-
   // --- Routes ---
-  // Temporary auth state — replace with real auth logic or context
-  const isSignedIn =
-    location.pathname.startsWith("/profile") ||
-    location.pathname.startsWith("/liked") ||
-    location.pathname.startsWith("/playlists") ||
-    location.pathname.startsWith("/my-music") ||
-    location.pathname.startsWith("/events") ||
-    location.pathname.startsWith("/HomeSignedIn") ||
-    location.pathname.startsWith("/messagedashboard");
 
   // Navigation paths based on App.jsx
   const homePath = isSignedIn ? "/HomeSignedIn" : "/";
