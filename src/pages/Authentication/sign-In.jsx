@@ -3,11 +3,12 @@ import styles from './styles.module.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { supabase } from '../../supabaseClient'
 
+import leepLogo from '/src/assets/leep-logo.png';
 import appleIcon from '/src/assets/apple-icon.svg';
 import googleIcon from '/src/assets/google-icon.svg';
 import linkedInIcon from '/src/assets/linkedin-icon.svg';
 import spotifyIcon from '/src/assets/spotify-icon.svg';
-import facebookIcon from '/src/assets/facebook-icon.svg'
+import facebookIcon from '/src/assets/facebook-icon.svg';
 
 export default function SignInPage() {
   const location = useLocation();
@@ -99,7 +100,7 @@ export default function SignInPage() {
       {/* Log In View */}
       {!isSignUp && (
         <div className={styles.box} style={{ marginTop: '3rem' }}>
-          <img src="/src/assets/leep-logo.png" alt="Corner Icon" className={styles.leepLogo} />
+          <img src={leepLogo} alt="Corner Icon" className={styles.leepLogo} />
 
           <div className={styles.boxLabel}>Log In</div>
 
@@ -179,7 +180,7 @@ export default function SignInPage() {
       {/* Sign Up View */}
       {isSignUp && (
         <div className={styles.box}>
-          <img src="/src/assets/leep-logo.png" alt="Corner Icon" className={styles.leepLogo} />
+          <img src={leepLogo} alt="Corner Icon" className={styles.leepLogo} />
 
           <div className={styles.boxLabel}>Sign Up</div>
 

@@ -138,9 +138,6 @@ export default function Header() {
               <Link to={profilePath} className="icon-button" aria-label="Profile">
                 <span className="icon user" />
               </Link>
-              <Link to="/notifications" className="icon-button" aria-label="Notifications">
-                <span className="icon bell" />
-              </Link>
 
               {/* Notifications: button + popover */}
               <div className="notif-wrapper">
@@ -203,10 +200,6 @@ export default function Header() {
 
               <Link to="/contact" className="icon-button" aria-label="Contact">
                 <span className="icon contact" />
-              </Link>
-
-              <Link to="/settings" className="icon-button" aria-label="Settings">
-                <span className="icon settings" />
               </Link>
               <button onClick={handleSignOut} className="btn-primary">Sign Out</button>
             </>

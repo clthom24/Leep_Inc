@@ -42,8 +42,6 @@ import Requests from "./pages/Messages/Requests";
 
 // ---------- Auth logic ----------
 function useAuth() {
-  // Replace this with real authentication logic.
-  return { isAuthenticated: true }; // temporary dev bypass
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 

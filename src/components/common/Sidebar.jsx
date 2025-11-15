@@ -53,16 +53,6 @@ export default function Sidebar({ collapsed, onToggle }) {
       <NavLink to="/events" className={styles.link} title="Events">
         <span className={styles.label}>Events</span>
       </NavLink>
-
-      {/* Logout button */}
-      <button
-        type="button" 
-        className={styles.link} 
-        title="Logout" 
-        onClick={handleLogout}
-      >
-        <span className={styles.label}>Logout</span>
-      </button>
     </aside>
   );
 }

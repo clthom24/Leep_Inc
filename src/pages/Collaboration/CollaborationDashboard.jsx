@@ -2,7 +2,7 @@ import Editor from "./Editor";
 import MyStems from "./MyStems";
 import SharedStems from "./SharedStems";
 import { useState } from "react";
-import styles from "./styles/collaborationdashboard.module.css";
+import styles from "./styles/collaborationDashboard.module.css";
 
 export default function CollaborationDashboard() {
   const [activeTab, setActiveTab] = useState("mystems");
