@@ -5,13 +5,10 @@
 // guessing auth state from current route.
 // =============================================
 
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import logo from "../../assets/leep-logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import logo from "../../assets/Logo.jpg";
 
 export default function Header() {
   const [session, setSession] = useState(null);
