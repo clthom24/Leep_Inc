@@ -1,9 +1,7 @@
 // =============================================
 // File: src/App.jsx
 // Purpose: Top-level routing with persistent Header + Footer
-// via RootLayout. Public pages and private pages share the
-// same global chrome. Auth-only pages are still wrapped by
-// AppLayout (sidebar + Outlet) and gated by PrivateRoute.
+// via RootLayout. Public and private pages share global chrome.
 // =============================================
 
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
@@ -19,6 +17,7 @@ import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
 import PricingPage from "./pages/Pricing";
 import SignedOut from "./pages/SignedOut";
+import Legal from "./pages/Legal/Legal";
 import NewPasswordPage from "./pages/Authentication/newPassword";
 import EmailConfirmationPage from "./pages/Authentication/emailConfirmation";
 
@@ -43,6 +42,8 @@ import Requests from "./pages/Messages/Requests";
 
 // ---------- Auth logic ----------
 function useAuth() {
+  // Replace this with real authentication logic.
+  return { isAuthenticated: true }; // temporary dev bypass
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -170,8 +171,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* ---------- GLOBAL LAYOUT (Header + Footer persistent) ---------- */}
-          <Route path="/" element={<LandingPage />} />
         <Route element={<RootLayout />}>
+          {/* Landing page (now inside RootLayout) */}
+          <Route index element={<LandingPage />} />
+
           {/* ---------- PUBLIC ---------- */}
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignInPage />} />
@@ -179,6 +182,8 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/SignedOut" element={<SignedOut />} />
+          <Route path="/Legal" element={<Legal />} />
           <Route path="/SignedOut" element={<SignedOut />} /> 0
            
            0

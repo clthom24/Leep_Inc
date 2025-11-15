@@ -22,10 +22,18 @@ export default function MyMusicPage() {
     audioFiles: [],
     stemFiles: [],
     coverArt: null,
+    coverArtPreview: null,
     title: '',
     description: '',
     tags: '',
     privacy: 'Public',
+  });
+
+  // NEW: acknowledgements state
+  const [acks, setAcks] = useState({
+    ownership: false,
+    enforcement: false,
+    remix: false,
   });
 
   const tabs = ['Overview', 'Your Network', 'Manage Tracks', 'Albums', 'Remixes'];
@@ -482,6 +490,7 @@ export default function MyMusicPage() {
   return (
     <div className={styles.container}>
       <div className={styles.pageTitle}>Your Music</div>
+
       {/* Top-level Tabs */}
       <div className={styles.tabsWrapper}>
         {tabs.map((tab) => (
@@ -506,12 +515,8 @@ export default function MyMusicPage() {
                   { id: 2, title: 'New Track 2', duration: '04:05' },
                 ].map((song) => (
                   <div key={song.id} className={styles.trackCard}>
-                    {/* Cover */}
                     <div className={styles.trackCover}>Cover</div>
-
-                    {/* Details */}
                     <div className={styles.trackDetails}>
-                      {/* Title + actions */}
                       <div className={styles.trackHeader}>
                         <div className={styles.trackTitle}>{song.title}</div>
                         <div className={styles.trackActions}>
@@ -519,10 +524,8 @@ export default function MyMusicPage() {
                           <button className={styles.linkButton}>Change Privacy</button>
                           <button className={styles.linkButton}>Remix</button>
                           <button className={styles.linkButton}>Delete</button>
+                        </div>
                       </div>
-                      </div>
-
-                      {/* Play bar */}
                       <div className={styles.trackTime}>
                         <span>00:00</span>
                         <button className={styles.playButton}>▶</button>
@@ -532,15 +535,11 @@ export default function MyMusicPage() {
                         <span>{song.duration}</span>
                       </div>
                     </div>
-
-                    {/* Stats */}
                     <div className={styles.trackStats}>
-                      <FaThumbsUp className={styles.icon} style={{marginTop: 'none'}}/>
+                      <FaThumbsUp className={styles.icon}/>
                       <span className={styles.trackStat}>000</span>
-
                       <FaRandom className={styles.icon} style={{fontSize: '1.375rem'}}/>
                       <span className={styles.trackStat}>000</span>
-
                       <FaPlus className={styles.icon} style={{fontSize: '1.5rem', marginLeft: '-0.25rem'}}/>
                       <span className={styles.trackStat}>000</span>
                     </div>
@@ -555,12 +554,8 @@ export default function MyMusicPage() {
                   { id: 2, title: 'New Remix 2', duration: '03:21' },
                 ].map((song) => (
                   <div key={song.id} className={styles.trackCard}>
-                    {/* Cover */}
                     <div className={styles.trackCover}>Cover</div>
-
-                    {/* Details */}
                     <div className={styles.trackDetails}>
-                      {/* Title + actions */}
                       <div className={styles.trackHeader}>
                         <div className={styles.trackTitle}>{song.title}</div>
                         <div className={styles.trackActions}>
@@ -568,10 +563,8 @@ export default function MyMusicPage() {
                           <button className={styles.linkButton}>Change Privacy</button>
                           <button className={styles.linkButton}>Original Artist</button>
                           <button className={styles.linkButton}>Delete</button>
+                        </div>
                       </div>
-                      </div>
-
-                      {/* Play bar */}
                       <div className={styles.trackTime}>
                         <span>00:00</span>
                         <button className={styles.playButton}>▶</button>
@@ -581,23 +574,19 @@ export default function MyMusicPage() {
                         <span>{song.duration}</span>
                       </div>
                     </div>
-
-                    {/* Stats */}
                     <div className={styles.trackStats}>
-                      <FaThumbsUp className={styles.icon} style={{marginTop: 'none'}}/>
+                      <FaThumbsUp className={styles.icon}/>
                       <span className={styles.trackStat}>000</span>
-
                       <FaRandom className={styles.icon} style={{fontSize: '1.375rem'}}/>
                       <span className={styles.trackStat}>000</span>
-                      
                       <FaPlus className={styles.icon} style={{fontSize: '1.5rem', marginLeft: '-0.25rem'}}/>
                       <span className={styles.trackStat}>000</span>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className={styles.overviewStats} style={{marginTop: '0.75rem'}}>Recent Followers</div>
 
+              <div className={styles.overviewStats} style={{marginTop: '0.75rem'}}>Recent Followers</div>
               <div className={styles.recentFollowersGrid}>
                 {[
                   { id: 1, name: 'Recent Follower #1' },
@@ -615,14 +604,11 @@ export default function MyMusicPage() {
 
           {activeTab === 'Your Network' && (
             <>
-              {/* Network Tabs */}
               <div className={styles.networkTabsWrapper}>
                 {networkTabs.map((tab) => (
                   <button
                     key={tab}
-                    className={`${styles.networkTab} ${
-                      activeNetworkTab === tab ? styles.activeNetworkTab : ''
-                    }`}
+                    className={`${styles.networkTab} ${activeNetworkTab === tab ? styles.activeNetworkTab : ''}`}
                     onClick={() => setActiveNetworkTab(tab)}
                   >
                     {tab}
@@ -630,12 +616,12 @@ export default function MyMusicPage() {
                 ))}
               </div>
 
-              {/* Accounts Grid */}
               <div className={styles.accountsGrid}>
                 {loadingNetwork ? (
                   <p>Loading your network...</p>
                 ) : filteredAccounts.length > 0 ? (
                   filteredAccounts.map((acc) => (
+                    <div key={acc.id} className={styles.accountCard}>
                     <div key={acc.id} className={styles.accountCard}>
                       <div className={styles.leftGroup}>
                         <div className={styles.avatar}></div>
@@ -810,9 +796,7 @@ export default function MyMusicPage() {
 
           {activeTab === 'Remixes' && (
             <div className={styles.tracksList}>
-              <div className={styles.overviewStats}>
-                Your Remixed Tracks
-              </div>
+              <div className={styles.overviewStats}>Your Remixed Tracks</div>
               {[
                 { id: 1, title: 'Song Title 1', duration: '03:45' },
                 { id: 2, title: 'Song Title 2', duration: '04:12' },
@@ -822,12 +806,8 @@ export default function MyMusicPage() {
                 { id: 6, title: 'Song Title 6', duration: '03:04' },
               ].map((song) => (
                 <div key={song.id} className={styles.trackCard}>
-                  {/* Cover on the left */}
                   <div className={styles.trackCover}>Cover</div>
-
-                  {/* Details area */}
                   <div className={styles.trackDetails}>
-                    {/* Row: Title + Actions */}
                     <div className={styles.trackHeader}>
                       <div className={styles.trackTitle}>
                         {song.title} <FaPencilAlt className={styles.Icon} style={{marginLeft: '0.25rem'}}/>
@@ -839,8 +819,6 @@ export default function MyMusicPage() {
                         <button className={styles.linkButton}>Delete</button>
                       </div>
                     </div>
-
-                    {/* Play bar row */}
                     <div className={styles.trackTime}>
                       <span>00:00</span>
                       <button className={styles.playButton}>▶</button>
@@ -850,26 +828,31 @@ export default function MyMusicPage() {
                       <span>{song.duration}</span>
                     </div>
                   </div>
-
-                  {/* Stats on the far right */}
                   <div className={styles.trackStats}>
-                      <FaThumbsUp className={styles.icon} style={{marginTop: 'none'}}/>
-                      <span className={styles.trackStat}>000</span>
-
-                      <FaRandom className={styles.icon} style={{fontSize: '1.375rem'}}/>
-                      <span className={styles.trackStat}>000</span>
-                      
-                      <FaPlus className={styles.icon} style={{fontSize: '1.5rem', marginLeft: '-0.25rem'}}/>
-                      <span className={styles.trackStat}>000</span>
-                    </div>
+                    <FaThumbsUp className={styles.icon}/>
+                    <span className={styles.trackStat}>000</span>
+                    <FaRandom className={styles.icon} style={{fontSize: '1.375rem'}}/>
+                    <span className={styles.trackStat}>000</span>
+                    <FaPlus className={styles.icon} style={{fontSize: '1.5rem', marginLeft: '-0.25rem'}}/>
+                    <span className={styles.trackStat}>000</span>
+                  </div>
                 </div>
               ))}
             </div>
           )}
-
         </div>
 
-        <button className={styles.uploadButton} onClick={() => setShowUploadModal(true)}>+</button>
+        {/* Floating Upload Button */}
+        <button
+          className={styles.uploadButton}
+          onClick={() => {
+            setShowUploadModal(true);
+            setUploadStep(1);
+            setAcks({ ownership: false, enforcement: false, remix: false });
+          }}
+        >
+          +
+        </button>
 
         {/* Upload Modal */}
         {showUploadModal && (
@@ -877,8 +860,9 @@ export default function MyMusicPage() {
             <div className={styles.uploadModal}>
               <div className={styles.uploadTitle}>Upload a New Track</div>
 
-              {/* Step Progress Indicator */}
+              {/* Step Progress Indicator (now 5 steps) */}
               <div className={styles.progressContainer}>
+                {[1, 2, 3, 4, 5].map((num) => (
                 {[1, 2, 3, 4, 5].map((num) => (
                   <div key={num} className={styles.progressStep}>
                     <div
@@ -913,7 +897,6 @@ export default function MyMusicPage() {
                     <label htmlFor="audioUpload" className={styles.fileUploadButton}>
                       <FaPlus className={styles.plusIcon} />
                     </label>
-
                     <input
                       id="audioUpload"
                       type="file"
@@ -928,13 +911,11 @@ export default function MyMusicPage() {
                     />
                   </h2>
 
-                  {/* Uploaded file list */}
                   {uploadData.audioFiles.length > 0 && (
                     <div className={styles.uploadedFilesList}>
                       {uploadData.audioFiles.map((file, index) => (
                         <div key={index} className={styles.uploadedFileItem}>
                           <span className={styles.fileName}>{file.name}</span>
-
                           <button
                             className={styles.removeFileButton}
                             onClick={() => {
@@ -1020,7 +1001,7 @@ export default function MyMusicPage() {
                             setUploadData({
                               ...uploadData,
                               coverArt: file,
-                              coverArtPreview: event.target.result, // base64 preview
+                              coverArtPreview: event.target.result,
                             });
                           };
                           reader.readAsDataURL(file);
@@ -1029,7 +1010,6 @@ export default function MyMusicPage() {
                     />
                   </h2>
 
-                  {/* Image preview */}
                   {uploadData.coverArtPreview && (
                     <div className={styles.coverArtPreviewWrapper}>
                       <img
@@ -1049,40 +1029,28 @@ export default function MyMusicPage() {
                     type="text"
                     placeholder="Track Title"
                     value={uploadData.title}
-                    onChange={(e) =>
-                      setUploadData({ ...uploadData, title: e.target.value })
-                    }
+                    onChange={(e) => setUploadData({ ...uploadData, title: e.target.value })}
                   />
-
                   <textarea
                     placeholder="Description: Let others know what your track is about..."
                     value={uploadData.description}
-                    onChange={(e) =>
-                      setUploadData({ ...uploadData, description: e.target.value })
-                    }
+                    onChange={(e) => setUploadData({ ...uploadData, description: e.target.value })}
                   />
-
                 </div>
               )}
 
               {uploadStep === 5 && (
                 <div className={styles.stepContent}>
                   <h2 className={styles.stepHeader}>Discoverability & Privacy</h2>
-
                   <input
                     type="text"
                     placeholder="Search for genres or tags to add to your track..."
                     value={uploadData.tags}
-                    onChange={(e) =>
-                      setUploadData({ ...uploadData, tags: e.target.value })
-                    }
+                    onChange={(e) => setUploadData({ ...uploadData, tags: e.target.value })}
                   />
-
                   <select
                     value={uploadData.privacy}
-                    onChange={(e) =>
-                      setUploadData({ ...uploadData, privacy: e.target.value })
-                    }
+                    onChange={(e) => setUploadData({ ...uploadData, privacy: e.target.value })}
                   >
                     <option>Public</option>
                     <option>Private</option>
@@ -1090,15 +1058,104 @@ export default function MyMusicPage() {
                 </div>
               )}
 
+              {/* NEW STEP 5: Rights & Acknowledgements */}
+              {uploadStep === 5 && (
+                <div className={styles.stepContent}>
+                  <h2 className={styles.stepHeader}>Rights & Acknowledgements</h2>
+
+                  <div style={{ display: 'grid', gap: 12, marginTop: 8 }}>
+                    <label
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '18px 1fr',
+                        gap: 10,
+                        alignItems: 'start',
+                        padding: 12,
+                        border: '1px solid var(--border)',
+                        borderRadius: 8,
+                        background: '#0e1115'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acks.ownership}
+                        onChange={(e) => setAcks({ ...acks, ownership: e.target.checked })}
+                      />
+                      <span style={{ fontSize: 14, lineHeight: 1.5 }}>
+                        I confirm that I own the rights to this Content, or I have obtained all necessary licenses,
+                        consents and releases (including for samples, compositions, recordings, and performances).
+                        I understand Leep does not authorize copyright infringement.
+                      </span>
+                    </label>
+
+                    <label
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '18px 1fr',
+                        gap: 10,
+                        alignItems: 'start',
+                        padding: 12,
+                        border: '1px solid var(--border)',
+                        borderRadius: 8,
+                        background: '#0e1115'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acks.enforcement}
+                        onChange={(e) => setAcks({ ...acks, enforcement: e.target.checked })}
+                      />
+                      <span style={{ fontSize: 14, lineHeight: 1.5 }}>
+                        I agree that Leep may use automated content identification, watermarking, and human review,
+                        and that Leep may remove or restrict Content subject to a valid rights-holder claim. False
+                        statements may result in account suspension, termination, and legal liability.
+                      </span>
+                    </label>
+
+                    <label
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '18px 1fr',
+                        gap: 10,
+                        alignItems: 'start',
+                        padding: 12,
+                        border: '1px solid var(--border)',
+                        borderRadius: 8,
+                        background: '#0e1115'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acks.remix}
+                        onChange={(e) => setAcks({ ...acks, remix: e.target.checked })}
+                      />
+                      <span style={{ fontSize: 14, lineHeight: 1.5 }}>
+                        For remixes/derivatives, I represent and warrant that I hold permissions for all source material used,
+                        and I will honor the owner’s settings (e.g., “No Derivatives”). I understand stems/remixes cannot be
+                        downloaded without owner approval.
+                      </span>
+                    </label>
+                  </div>
+
+                  {!allAcksChecked && (
+                    <p style={{ color: 'var(--muted)', fontSize: 12, marginTop: 8 }}>
+                      Please check all acknowledgements to enable Upload.
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Navigation buttons */}
               <div className={styles.modalButtons}>
-                {/* Previous (only shows after Step 1) */}
                 {uploadStep > 1 ? (
-                  <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => setUploadStep(uploadStep - 1)}>
+                  <button
+                    style={{fontSize: '0.875rem', paddingInline: '1rem'}}
+                    onClick={() => setUploadStep(uploadStep - 1)}
+                  >
                     Previous
                   </button>
                 ) : (
-                  <div></div> // Empty div as spacer to keep layout balanced
+                  <div />
                 )}
 
                 {/* Next or Finish */}
@@ -1117,7 +1174,10 @@ export default function MyMusicPage() {
               {/* Close button */}
               <button
                 className={styles.closeButton}
-                onClick={() => setShowUploadModal(false)}
+                onClick={() => {
+                  setShowUploadModal(false);
+                  resetUploadState();
+                }}
               >
                 ✕
               </button>

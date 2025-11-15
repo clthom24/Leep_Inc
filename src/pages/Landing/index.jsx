@@ -27,9 +27,6 @@ export default function LandingPage() {
         <UseCasesStackSection />
       </section>
 
-      <footer className="mt-auto border-t border-border p-6 text-center text-sm text-gray-400 bg-muted">
-        © {new Date().getFullYear()} Leep Audio
-      </footer>
     </main>
   );
 }

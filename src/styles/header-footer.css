@@ -248,3 +248,125 @@ body {
   color: var(--muted);
   font-size: 14px;
 }
+
+/* -------- Notifications badge + popover -------- */
+.notif-wrapper { position: relative; }
+
+.notif-button { position: relative; }
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ff3b30; /* red */
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--panel);
+  line-height: 1;
+}
+
+.popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 320px;
+  max-height: 420px;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+  z-index: 60;
+}
+
+.popover-header,
+.popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.popover-footer {
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+}
+
+.link-reset {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.empty-state {
+  padding: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.notif-list {
+  max-height: 300px;
+  overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: 6px 6px 6px 6px;
+}
+
+.notif-item {
+  display: grid;
+  grid-template-columns: 1fr
+  ;
+  gap: 4px 8px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: default;
+}
+
+.notif-item.unread {
+  background: rgba(141, 219, 255, 0.41);
+  position: relative;
+}
+
+.notif-item.unread::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translate(-12px, -50%);
+}
+
+.notif-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.notif-title {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.notif-meta {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.btn-outline.small {
+  height: 28px;
+  font-size: 12px;
+  padding: 0 10px;
+}

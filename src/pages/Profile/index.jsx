@@ -1,4 +1,6 @@
 // src/pages/Profile/index.jsx
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import styles from "./profile.module.css";
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient"; 
@@ -203,4 +205,149 @@ export default function Profile() {
       </section>
     </div>
   );
+    const handleExportEPK = () => {
+    const doc = new jsPDF({ unit: "pt", format: "a4" }); // 595x842 pt
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 48;
+    let y = margin;
+
+    // ---------- Header / Masthead ----------
+    // Banner bar
+    doc.setFillColor(18, 22, 27);
+    doc.rect(0, 0, pageWidth, 80, "F");
+
+    // Brand / Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("Electronic Press Kit", margin, 50);
+
+    // Artist Name
+    doc.setFontSize(26);
+    doc.text(artist.name, margin, 80);
+
+    // Reset text color for body
+    doc.setTextColor(0, 0, 0);
+    y = 120;
+
+    // ---------- Artist Bio ----------
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("About", margin, y);
+    y += 14;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const bioLines = doc.splitTextToSize(artist.bio, pageWidth - margin * 2);
+    doc.text(bioLines, margin, y);
+    y += bioLines.length * 14 + 10;
+
+    // ---------- Stats line ----------
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Highlights (Stats)", margin, y);
+    y += 16;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const statsLine = `Followers: ${artist.stats.followers}   •   Plays: ${artist.stats.plays}   •   Likes: ${artist.stats.likes}`;
+    doc.text(statsLine, margin, y);
+    y += 22;
+
+    // ---------- Track Highlights Table ----------
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Featured Tracks", margin, y);
+    y += 10;
+
+    autoTable(doc, {
+      startY: y,
+      head: [["Title", "Artist"]],
+      body: highlights.map((h) => [h.title, h.artist]),
+      styles: {
+        font: "helvetica",
+        fontSize: 10,
+        cellPadding: 6,
+        lineColor: [220, 220, 220],
+        lineWidth: 0.5,
+      },
+      headStyles: {
+        fillColor: [30, 144, 255], // accent
+        textColor: 255,
+        halign: "left",
+      },
+      margin: { left: margin, right: margin },
+      theme: "grid",
+      didDrawPage: (data) => {},
+    });
+
+    y = doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 20 : y + 120;
+
+    // ---------- Press quotes (optional) ----------
+    if (artist.pressQuotes?.length) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text("Press Quotes", margin, y);
+      y += 12;
+
+      doc.setFont("helvetica", "oblique");
+      doc.setFontSize(11);
+      artist.pressQuotes.forEach((q) => {
+        const quote = `“${q.quote}” — ${q.outlet}`;
+        const lines = doc.splitTextToSize(quote, pageWidth - margin * 2);
+        // page break if needed
+        if (y + lines.length * 14 > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+        doc.text(lines, margin, y);
+        y += lines.length * 14 + 8;
+      });
+      y += 6;
+    }
+
+    // Page break if near bottom before contacts
+    if (y > pageHeight - 150) {
+      doc.addPage();
+      y = margin;
+    }
+
+    // ---------- Contact & Links ----------
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Contact & Links", margin, y);
+    y += 14;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const contactLines = [
+      `Email: ${artist.email}`,
+      `Website: ${artist.website}`,
+      ...artist.socials.map((s) => `${s.label}: ${s.url}`),
+    ];
+    contactLines.forEach((line) => {
+      if (y + 16 > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+      doc.text(line, margin, y);
+      y += 16;
+    });
+
+    // ---------- Footer ----------
+    const footerY = pageHeight - margin + 12;
+    doc.setDrawColor(220, 220, 220);
+    doc.line(margin, footerY - 18, pageWidth - margin, footerY - 18);
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(
+      "© Leep Audio • EPK generated from profile • For press & promo use",
+      margin,
+      footerY
+    );
+
+    // ---------- Save ----------
+    doc.save("epk.pdf");
+  };
 }
