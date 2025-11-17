@@ -7,20 +7,18 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import ScrollToHash from "./ScrollToHash";
 
+// Removed for now: <ScrollToHash /> below Header for error fix
+import ScrollToHash from "./ScrollToHash";
 
 export default function RootLayout() {
   return (
     <div className="app-shell">
       <Header />
-      <ScrollToHash />
       <main className="app-main">
-        <Outlet />
+      <Outlet />
       </main>
       <Footer />
     </div>
   );
 }
-
-

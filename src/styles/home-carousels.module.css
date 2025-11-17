@@ -20,6 +20,7 @@
   padding: 18px 14px 22px;
   margin-bottom: 22px;
   position: relative;
+  scrollbar-color: #4fc3f7 #141821;
 }
 .section h2 {
   margin: 0 10px 12px;

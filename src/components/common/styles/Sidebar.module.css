@@ -1,5 +1,5 @@
 .aside {
-  background: #141821;
+  background: #15181c;
   border-right: 1px solid #2a2f3a;
   padding: 12px;
   display: flex;
@@ -33,6 +33,9 @@
   text-decoration: none;
   border: 1px solid transparent;
   white-space: nowrap;
+  font-size: 17px;
+  font-weight:400;
+  justify-content: center;
 }
 .link:hover { background: rgba(232,235,240,0.06); border-color: #2a2f3a; }
 
