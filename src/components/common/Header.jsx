@@ -102,7 +102,7 @@ export default function Header() {
   };
 
   return (
-    <header className="site-header" style={{backgroundColor: '#15181c', width: '100%', overflowX: 'auto'}}>
+    <header className="site-header" style={{backgroundColor: '#15181c', width: '100%', overflowX: 'unset'}}>
       <div className="header-inner" style={{maxWidth: '100%', paddingBottom: '4px', paddingTop: '4px', marginLeft: '0.5vw', marginRight: '0px', gap: '14vw'}}>
         {/* Logo / Brand */}
         <Link to={homePath} className="brand" aria-label="Leep Audio home">

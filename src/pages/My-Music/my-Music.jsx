@@ -28,6 +28,15 @@ export default function MyMusicPage() {
     privacy: 'Public',
   });
 
+  // NEW: acknowledgements state
+  const [acks, setAcks] = useState({
+    ownership: false,
+    enforcement: false,
+    remix: false,
+  });
+
+  const allAcksChecked = acks.ownership && acks.enforcement && acks.remix;
+
   const tabs = ['Overview', 'Your Network', 'Manage Tracks', 'Albums', 'Remixes'];
   const networkTabs = ['Followers', 'Following', 'Collaborators'];
   const [followers, setFollowers] = useState([]);
@@ -879,7 +888,7 @@ export default function MyMusicPage() {
 
               {/* Step Progress Indicator */}
               <div className={styles.progressContainer}>
-                {[1, 2, 3, 4, 5].map((num) => (
+                {[1, 2, 3, 4, 5, 6].map((num) => (
                   <div key={num} className={styles.progressStep}>
                     <div
                       className={`${styles.circle} ${
@@ -894,7 +903,7 @@ export default function MyMusicPage() {
                     >
                       {uploadStep > num ? '✓' : num}
                     </div>
-                    {num < 5 && (
+                    {num < 6 && (
                       <div
                         className={`${styles.line} ${
                           uploadStep > num ? styles.completedLine : ''
@@ -1090,6 +1099,93 @@ export default function MyMusicPage() {
                 </div>
               )}
 
+              {/* NEW STEP 5: Rights & Acknowledgements */}
+              {uploadStep === 6 && (
+                <div className={styles.stepContent}>
+                  <h2 className={styles.stepHeader}>Rights & Acknowledgements</h2>
+
+                  <div style={{ display: 'grid', gap: 12, marginTop: 8, maxWidth: '50vw'}}>
+                    <label
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '18px 1fr',
+                        gap: 10,
+                        alignItems: 'start',
+                        padding: 12,
+                        border: '1px solid var(--border)',
+                        borderRadius: 8,
+                        background: '#0e1115'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acks.ownership}
+                        onChange={(e) => setAcks({ ...acks, ownership: e.target.checked })}
+                      />
+                      <span style={{ fontSize: 14, lineHeight: 1.5 }}>
+                        I confirm that I own the rights to this Content, or I have obtained all necessary licenses,
+                        consents and releases (including for samples, compositions, recordings, and performances).
+                        I understand Leep does not authorize copyright infringement.
+                      </span>
+                    </label>
+
+                    <label
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '18px 1fr',
+                        gap: 10,
+                        alignItems: 'start',
+                        padding: 12,
+                        border: '1px solid var(--border)',
+                        borderRadius: 8,
+                        background: '#0e1115'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acks.enforcement}
+                        onChange={(e) => setAcks({ ...acks, enforcement: e.target.checked })}
+                      />
+                      <span style={{ fontSize: 14, lineHeight: 1.5 }}>
+                        I agree that Leep may use automated content identification, watermarking, and human review,
+                        and that Leep may remove or restrict Content subject to a valid rights-holder claim. False
+                        statements may result in account suspension, termination, and legal liability.
+                      </span>
+                    </label>
+
+                    <label
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '18px 1fr',
+                        gap: 10,
+                        alignItems: 'start',
+                        padding: 12,
+                        border: '1px solid var(--border)',
+                        borderRadius: 8,
+                        background: '#0e1115'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acks.remix}
+                        onChange={(e) => setAcks({ ...acks, remix: e.target.checked })}
+                      />
+                      <span style={{ fontSize: 14, lineHeight: 1.5 }}>
+                        For remixes/derivatives, I represent and warrant that I hold permissions for all source material used,
+                        and I will honor the owner’s settings (e.g., “No Derivatives”). I understand stems/remixes cannot be
+                        downloaded without owner approval.
+                      </span>
+                    </label>
+                  </div>
+
+                  {!allAcksChecked && (
+                    <p style={{ color: 'var(--muted)', fontSize: 12, marginTop: 8 }}>
+                      Please check all acknowledgements to enable Upload.
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Navigation buttons */}
               <div className={styles.modalButtons}>
                 {/* Previous (only shows after Step 1) */}
@@ -1102,7 +1198,7 @@ export default function MyMusicPage() {
                 )}
 
                 {/* Next or Finish */}
-                {uploadStep < 5 ? (
+                {uploadStep < 6 ? (
                   <button style={{fontSize: '0.875rem', paddingInline: '1rem'}} onClick={() => {setUploadStep(uploadStep + 1);}}>
                     Next
                   </button>
