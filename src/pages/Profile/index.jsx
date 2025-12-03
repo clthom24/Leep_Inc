@@ -42,7 +42,7 @@ export default function Profile() {
 
     // Artist Name
     doc.setFontSize(26);
-    doc.text(artist.name, margin, 80);
+    doc.text(profile.display_name, margin, 80);
 
     // Reset text color for body
     doc.setTextColor(0, 0, 0);
@@ -264,8 +264,7 @@ export default function Profile() {
         <div className={styles.section}>
           <h2 className={styles["section-title"]}>About</h2>
           <p className={`${styles.muted} ${styles.small}`}>
-            Artist bio or description goes here…  
-            (Later you can store this in Supabase too.)
+            Describe yourself here. Remember to keep it professional and engaging for your audience!
           </p>
         </div>
 
