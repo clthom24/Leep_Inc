@@ -30,7 +30,6 @@
   height: auto;
   border-radius: 50%;
   cursor: pointer;
-  margin-bottom: auto;
 }
 
 .boxLabel {
@@ -45,7 +44,7 @@
   color: #fff;
   display: inline-block;
   font-size: 0.875rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   opacity: 75%;
 }
 
