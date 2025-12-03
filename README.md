@@ -2,8 +2,9 @@
 
 ![Node.js](https://img.shields.io/badge/node-v20.12.2-brightgreen)
 ![Vite](https://img.shields.io/badge/bundler-vite_4.0-purple)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-enabled-blue)
+![CSS](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics)
 ![React](https://img.shields.io/badge/react-18+-blue)
+![Supabase](https://supabase.com/docs)
 
 Welcome to the **Leep Inc. Music Platform Developer Environment**. This guide is a complete walkthrough of our file structure, project setup, coding practices, and day-to-day development workflow. It is written to be beginner-friendly, yet detailed enough to support experienced team members.
 
@@ -38,30 +39,44 @@ Commit SHA: `7623964f06e12e7cfc311f412c099de789683d15`
 
 ```
 leep-platform/
-├── public/                   # Static public assets like index.html and logos
-├── src/                      # All frontend application logic lives here
-│   ├── assets/               # Static assets like SVGs, images, etc.
-│   ├── components/           # Reusable components
-│   │   └── common/           # Shared UI components used across pages (e.g., Button.jsx)
-│   ├── context/              # Global app state with React Context (e.g., AuthProvider)
-│   ├── hooks/                # Custom React hooks (e.g., useAuth, usePlayer)
-│   ├── pages/                # Top-level route pages
-│   │   ├── Profile/          # Profile route and related layout/components
-│   │   ├── Discovery/        # Discovery page components and logic
-│   │   └── Collaboration/    # Collaboration/remix/upload UI
-│   ├── services/             # Axios API utilities and integration functions
-│   ├── styles/               # Tailwind global styles and design tokens
-│   ├── utils/                # Helper functions (e.g., formatTime, parseWaveData)
-│   ├── App.jsx               # App-level routes and layout wrappers
-│   └── main.jsx              # Entry file for mounting the React app
-├── .gitignore                # Files ignored by Git
-├── index.html                # Base HTML file used by Vite
-├── package.json              # Project metadata and dependencies
+├── backend/                  # Node.js backend server and upload handling
+│   ├── server.js             # Express server
+│   ├── uploads/              # File uploads storage
+│   ├── README.md             # Backend documentation
+│   ├── TESTING_GUIDE.md      # Backend testing instructions
+│   └── package.json          # Backend dependencies
+├── public/                   # Static public assets like hero images and mockups
+│   ├── Mockups/              # Design mockups used in UI
+│   ├── hero-background.jpg   # Landing visuals
+│   ├── artist.jpg            # Default artist asset
+│   └── leep.avif             # Optimized hero media
+├── src/                      # Frontend application logic
+│   ├── assets/               # Icons, images, and branding
+│   ├── components/           # Reusable UI components
+│   │   ├── common/           # Shared layout components
+│   │   ├── CollabComponents/ # Collaboration tools UI
+│   │   └── MessagesComponents/ # Messaging‐related UI
+│   ├── pages/                # Route pages for each app screen
+│   │   ├── Landing/          # Marketing and onboarding flow
+│   │   ├── Authentication/   # Sign in, reset password, onboarding
+│   │   ├── Profile/          # Profile and user settings
+│   │   ├── Collaboration/    # Editor and stem management
+│   │   ├── Messages/         # Inbox, requests, threads
+│   │   ├── Playlists/        # Playlist browsing
+│   │   ├── My-Music/         # User music library
+│   │   └── Liked/            # Saved and liked media
+│   ├── styles/               # Global and modular CSS files
+│   ├── supabaseClient.js     # Supabase initialization
+│   ├── App.jsx               # App routing and layout
+│   └── main.jsx              # React entry point
+├── index.html                # Base HTML used by Vite
+├── vite.config.js            # Vite configuration
+├── tailwind.config.js        # Tailwind CSS setup
+├── postcss.config.cjs        # PostCSS processor for Tailwind
+├── package.json              # Root project dependencies
 ├── package-lock.json         # Dependency lock file
-├── postcss.config.js         # PostCSS processor for Tailwind
-├── tailwind.config.js        # Tailwind CSS configuration
-├── vite.config.js            # Vite bundler settings and aliases
-└── README.md                 # Project overview and onboarding instructions
+├── .gitignore                # Git ignored files
+└── README.md                 # Project overview and onboarding
 ```
 
 </details>
@@ -102,23 +117,6 @@ npm run dev
 ```
 
 Visit: `http://localhost:5173`
-
-</details>
-
-<details>
-<summary><strong>🎨 TailwindCSS Guidelines</strong></summary>
-
-Use utility classes or shared global classes defined in `src/styles/globals.css`. Examples include:
-
-```jsx
-<button className="btn-primary">Follow</button>
-<div className="card-base">
-  <h2 className="section-title">Top Songs</h2>
-</div>
-```
-
-* Prefer `text-white`, `p-4`, `rounded-md`, etc. for layout.
-* Use shared classes for buttons, cards, sections.
 
 </details>
 
